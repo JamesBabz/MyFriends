@@ -11,6 +11,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -26,7 +27,6 @@ public class Map_details extends FragmentActivity implements OnMapReadyCallback 
 
     public Map_details() {
         Location location = new Location("");
-        friend = new Friend(1,"Bent","Spangsbjerg møllevej 62b", location, 12345678, "test@test.com", "www.test.dk", "11-07-89", null);
 
     }
 
@@ -34,6 +34,8 @@ public class Map_details extends FragmentActivity implements OnMapReadyCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_details);
+        Bundle extras = getIntent().getExtras();
+        friend = ((Friend) extras.getSerializable("FRIEND"));
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -50,11 +52,16 @@ public class Map_details extends FragmentActivity implements OnMapReadyCallback 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng location = new LatLng(address.get(0).getLatitude(), address.get(0).getLongitude());
-        mMap.addMarker(new MarkerOptions().position(location).title("Marker in Sydney"));
-        mMap.moveCamera( CameraUpdateFactory.zoomTo( 17.0f ) );
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+        if(address.size() > 0) {
+            LatLng location = new LatLng(address.get(0).getLatitude(), address.get(0).getLongitude());
+            MarkerOptions options = new MarkerOptions();
+            options.position(location);
+            options.title(friend.getName());
+//            options.icon(BitmapDescriptorFactory.);
+            mMap.addMarker(options);
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(17.5f));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+        }
     }
 
 
