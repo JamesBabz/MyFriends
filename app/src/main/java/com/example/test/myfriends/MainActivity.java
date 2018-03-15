@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
         listViewFriends.setAdapter(listAdapter);
 
-        openFriendActivity();
+        addListenerOnList();
 
     }
 
@@ -52,10 +52,8 @@ public class MainActivity extends AppCompatActivity {
     {
         Friend newFriend = new Friend(1, "Knud", "Storegade 23", null, 12345678,"knud@mail.dk", "knudshjemmeside.dk", "23-03-81", null);
         Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", null, 12345678,"kristian@mail.dk", "kristianshjemmeside.dk", "23-03-81", null);
-
-        Friend newFriend3 = new Friend(2, "Kristian", "Lillevej 55", null, 12345678,"kristian@mail.dk", "kristianshjemmeside.dk", "23-03-81", null);
-
-        Friend newFriend4 = new Friend(2, "Kristian", "Lillevej 55", null, 12345678,"kristian@mail.dk", "kristianshjemmeside.dk", "23-03-81", null);
+        Friend newFriend3 = new Friend(3, "Simon", "Peder gade 44", null, 12345678,"simon@mail.dk", "simonshjemmeside.dk", "23-03-81", null);
+        Friend newFriend4 = new Friend(4, "Hans", "Kirkevej 3", null, 12345678,"hans@mail.dk", "hanseshjemmeside.dk", "23-03-81", null);
         friendService.createFriend(newFriend);
         friendService.createFriend(newFriend2);
         friendService.createFriend(newFriend3);
@@ -65,29 +63,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void openFriendActivity() {
+    private void addListenerOnList() {
         listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Friend entry = (Friend) parent.getItemAtPosition(position);
-
-
-                Intent intent = new Intent(MainActivity.this, FriendActivity.class);
-                intent.putExtra("Name", entry.getName());
-                startActivity(intent);
+                openFriendView(entry);
             }
-
         });
+    }
 
+    private void openFriendView(Friend entry){
 
+        Intent intent = new Intent(MainActivity.this, FriendActivity.class);
+        intent.putExtra("FRIEND", entry);
+        startActivity(intent);
     }
 }
+
 
 class ListAdapter extends ArrayAdapter<Friend> {
 
     private ArrayList<Friend> friends;
+    Context context;
 
     private final int[] colors = {
             Color.parseColor("#ffffff"),
@@ -98,6 +96,7 @@ class ListAdapter extends ArrayAdapter<Friend> {
                        ArrayList<Friend> friends) {
         super(context, textViewResourceId, friends);
         this.friends = friends;
+        this.context = context;
     }
 
 
@@ -128,6 +127,7 @@ class ListAdapter extends ArrayAdapter<Friend> {
 
         name.setText(friend.getName());
         phone.setText(friend.getPhone() +"");
+        picture.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
 
 
 
