@@ -13,10 +13,9 @@
         app:srcCompat="@mipmap/ic_launcher" />
 
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="48dp"
         android:orientation="vertical">
-
 
 
         <TextView
@@ -36,5 +35,11 @@
 
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageViewBirthday"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_weight="1" />
 
 </LinearLayout>
