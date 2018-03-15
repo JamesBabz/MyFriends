@@ -21,7 +21,10 @@ import android.widget.Toast;
 import com.example.test.myfriends.BLL.FriendService;
 import com.example.test.myfriends.Entity.Friend;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void createFriend()
     {
-        Friend newFriend = new Friend(1, "Knud", "Storegade 23", null, 12345678,"knud@mail.dk", "knudshjemmeside.dk", "23-03-81", null);
-        Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", null, 12345678,"kristian@mail.dk", "kristianshjemmeside.dk", "23-03-81", null);
-        Friend newFriend3 = new Friend(3, "Simon", "Peder gade 44", null, 12345678,"simon@mail.dk", "simonshjemmeside.dk", "23-03-81", null);
-        Friend newFriend4 = new Friend(4, "Hans", "Kirkevej 3", null, 12345678,"hans@mail.dk", "hanseshjemmeside.dk", "23-03-81", null);
+        Friend newFriend = new Friend(1, "Knud", "Storegade 23", null, 12345678,"knud@mail.dk", "knudshjemmeside.dk", "15-03-1997", null);
+        Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", null, 12345678,"kristian@mail.dk", "kristianshjemmeside.dk", "23-03-1981", null);
+        Friend newFriend3 = new Friend(3, "Simon", "Peder gade 44", null, 12345678,"simon@mail.dk", "simonshjemmeside.dk", "17-03-1981", null);
+        Friend newFriend4 = new Friend(4, "Hans", "Kirkevej 3", null, 12345678,"hans@mail.dk", "hanseshjemmeside.dk", "15-03-1981", null);
         friendService.createFriend(newFriend);
         friendService.createFriend(newFriend2);
         friendService.createFriend(newFriend3);
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Listens on witch item is clicked and
     private void addListenerOnList() {
         listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Opens FriendActivity with all information about the selected friend
     private void openFriendView(Friend entry){
 
         Intent intent = new Intent(MainActivity.this, FriendActivity.class);
@@ -86,7 +91,9 @@ class ListAdapter extends ArrayAdapter<Friend> {
 
     private ArrayList<Friend> friends;
     Context context;
+    private FriendService friendService;
 
+    // Array of colors to set in listView
     private final int[] colors = {
             Color.parseColor("#ffffff"),
             Color.parseColor("#b3cbf2")
@@ -97,6 +104,7 @@ class ListAdapter extends ArrayAdapter<Friend> {
         super(context, textViewResourceId, friends);
         this.friends = friends;
         this.context = context;
+        friendService = FriendService.getInstance();
     }
 
 
@@ -104,6 +112,7 @@ class ListAdapter extends ArrayAdapter<Friend> {
     public View getView(int position, View v, ViewGroup parent) {
 
         String TAG = "tag";
+
         if (v == null) {
             LayoutInflater li = (LayoutInflater) getContext().getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
@@ -116,20 +125,23 @@ class ListAdapter extends ArrayAdapter<Friend> {
 
         v.setBackgroundColor(colors[position % colors.length]);
 
-
         Friend friend = friends.get(position);
-
 
         TextView name = v.findViewById(R.id.twName);
         TextView phone = v.findViewById(R.id.twPhone);
         ImageView picture = v.findViewById(R.id.imageViewFriend);
+        ImageView birthday = v.findViewById(R.id.imageViewBirthday);
 
 
         name.setText(friend.getName());
         phone.setText(friend.getPhone() +"");
         picture.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
 
-
+        //Sets the image of Dannebrog if the friend has birthday
+        if(friendService.isItBirthday(friend.getBirthday()))
+        {
+            birthday.setImageDrawable(context.getResources().getDrawable(R.drawable.dannebrog));
+        }
 
         return v;
     }
