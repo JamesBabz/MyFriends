@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,8 +27,12 @@ public class FriendActivity extends AppCompatActivity {
     ImageView ivPicture;
 
     Button btnShow;
+    ImageButton btnSms;
+    ImageButton btnCall;
 
-    Friend newFriend;
+
+
+
 
     private FriendService friendService;
 
@@ -48,18 +53,18 @@ public class FriendActivity extends AppCompatActivity {
 
 
         btnShow = findViewById(R.id.btnShow);
+        btnSms = findViewById(R.id.btnSms);
+        btnCall = findViewById(R.id.btnCall);
 
+        smsPhone();
+        callPhone();
         setFriendInfo();
-
-
-        //callPhone();
 
     }
 
     private void setFriendInfo()
     {
         Bundle extras = getIntent().getExtras();
-
         Friend friend = ((Friend) extras.getSerializable("FRIEND"));
 
         txtName.setText(friend.getName());
@@ -71,8 +76,6 @@ public class FriendActivity extends AppCompatActivity {
         ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.download));
 
         openMap(friend);
-
-
     }
 
 
@@ -80,18 +83,38 @@ public class FriendActivity extends AppCompatActivity {
         friendService = FriendService.getInstance();
     }
 
-/*
+
     public void smsPhone()
     {
-        button2.setOnClickListener(new View.OnClickListener() {
+        btnSms.setOnClickListener(new View.OnClickListener() {
+
+            Bundle extras = getIntent().getExtras();
+            Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("smsto:" + Uri.encode("40470903")));
+                intent.setData(Uri.parse("smsto:" + Uri.encode(friend.getPhone() + "")));
                 startActivity(intent);
                 }
         });
-    }*/
+    }
+
+    public void callPhone()
+    {
+        btnCall.setOnClickListener(new View.OnClickListener() {
+
+            Bundle extras = getIntent().getExtras();
+            Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + friend.getPhone() + ""));
+                startActivity(intent);
+            }
+        });
+    }
 
     public void openMap(final Friend entry)
     {
