@@ -25,7 +25,7 @@ public class FriendActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friend);
+        setContentView(R.layout.activity_details);
 
 
         txtName = findViewById(R.id.txtName);
@@ -36,6 +36,11 @@ public class FriendActivity extends AppCompatActivity {
         txtWeb = findViewById(R.id.txtWeb);
         ivPicture = findViewById(R.id.ivPicture);
 
+        Bundle extras = getIntent().getExtras();
+
+         String name = ((String) extras.getSerializable("Name"));
+
+        txtName.setText(name);
         createFriend();
 
     }
@@ -51,7 +56,7 @@ public class FriendActivity extends AppCompatActivity {
         friendService.createFriend(newFriend);
 
 
-        txtName.setText(newFriend.getName());
+
         txtAdress.setText(newFriend.getAddress());
         txtPhone.setText(newFriend.getPhone() + "");
         txtMail.setText(newFriend.getMail());
