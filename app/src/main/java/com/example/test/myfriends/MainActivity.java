@@ -45,8 +45,14 @@ createFriend();
     {
         Friend newFriend = new Friend(1, "Knud", "Storegade 23", null, 12345678,"knud@mail.dk", "knudshjemmeside.dk", "23-03-81", null);
         Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", null, 12345678,"kristian@mail.dk", "kristianshjemmeside.dk", "23-03-81", null);
+
+        Friend newFriend3 = new Friend(2, "Kristian", "Lillevej 55", null, 12345678,"kristian@mail.dk", "kristianshjemmeside.dk", "23-03-81", null);
+
+        Friend newFriend4 = new Friend(2, "Kristian", "Lillevej 55", null, 12345678,"kristian@mail.dk", "kristianshjemmeside.dk", "23-03-81", null);
         friendService.createFriend(newFriend);
         friendService.createFriend(newFriend2);
+        friendService.createFriend(newFriend3);
+        friendService.createFriend(newFriend4);
     }
 }
 
@@ -55,8 +61,8 @@ class ListAdapter extends ArrayAdapter<Friend> {
     private ArrayList<Friend> friends;
 
     private final int[] colors = {
-            Color.parseColor("#b3cbf2"),
-            Color.parseColor("#ffffff")
+            Color.parseColor("#ffffff"),
+            Color.parseColor("#b3cbf2")
     };
 
     public ListAdapter(Context context, int textViewResourceId,
