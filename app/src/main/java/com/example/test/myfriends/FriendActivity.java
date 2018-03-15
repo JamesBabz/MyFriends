@@ -1,7 +1,13 @@
 package com.example.test.myfriends;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,8 +25,12 @@ public class FriendActivity extends AppCompatActivity {
     TextView txtWeb;
     ImageView ivPicture;
 
+    Button button2;
+
+    Friend newFriend;
 
     private FriendService friendService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +46,8 @@ public class FriendActivity extends AppCompatActivity {
         txtWeb = findViewById(R.id.txtWeb);
         ivPicture = findViewById(R.id.ivPicture);
 
+        button2 = findViewById(R.id.button2);
+
         Bundle extras = getIntent().getExtras();
 
          String name = ((String) extras.getSerializable("Name"));
@@ -43,8 +55,10 @@ public class FriendActivity extends AppCompatActivity {
         txtName.setText(name);
         createFriend();
 
-    }
+        callPhone();
 
+
+    }
 
     public FriendActivity() {
         friendService = FriendService.getInstance();
@@ -52,10 +66,8 @@ public class FriendActivity extends AppCompatActivity {
 
     private void createFriend()
     {
-        Friend newFriend = new Friend(1, "Knud", "Storegade 23", null, 12345678,"knud@mail.dk", "knudshjemmeside.dk", "23-03-81", null);
+        newFriend = new Friend(1, "Knud", "Storegade 23", null, 12345678,"knud@mail.dk", "knudshjemmeside.dk", "23-03-81", null);
         friendService.createFriend(newFriend);
-
-
 
         txtAdress.setText(newFriend.getAddress());
         txtPhone.setText(newFriend.getPhone() + "");
@@ -63,6 +75,19 @@ public class FriendActivity extends AppCompatActivity {
         txtWeb.setText(newFriend.getWebsite());
         txtBirthday.setText(newFriend.getBirthday());
         ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.download));
+    }
 
+
+    public void callPhone()
+    {
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("smsto:" + Uri.encode("40470903")));
+                startActivity(intent);
+                }
+        });
     }
 }
+
