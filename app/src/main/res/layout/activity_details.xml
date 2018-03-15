@@ -136,11 +136,11 @@
         android:layout_marginStart="113dp"
         android:text="Home"
         app:layout_constraintBottom_toTopOf="@+id/ivPicture"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintEnd_toStartOf="@+id/btnShow"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnShow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="80dp"
