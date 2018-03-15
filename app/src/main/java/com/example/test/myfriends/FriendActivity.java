@@ -25,7 +25,7 @@ public class FriendActivity extends AppCompatActivity {
     TextView txtWeb;
     ImageView ivPicture;
 
-    Button button2;
+    Button btnShow;
 
     Friend newFriend;
 
@@ -47,9 +47,12 @@ public class FriendActivity extends AppCompatActivity {
         ivPicture = findViewById(R.id.ivPicture);
 
 
-        button2 = findViewById(R.id.button2);
+        btnShow = findViewById(R.id.btnShow);
 
         setFriendInfo();
+
+
+        //callPhone();
 
     }
 
@@ -67,8 +70,7 @@ public class FriendActivity extends AppCompatActivity {
         txtBirthday.setText(friend.getBirthday());
         ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.download));
 
-        callPhone();
-
+        openMap(friend);
 
 
     }
@@ -78,21 +80,8 @@ public class FriendActivity extends AppCompatActivity {
         friendService = FriendService.getInstance();
     }
 
-    private void createFriend()
-    {
-        newFriend = new Friend(1, "Knud", "Storegade 23", null, 12345678,"knud@mail.dk", "knudshjemmeside.dk", "23-03-81", null);
-        friendService.createFriend(newFriend);
-
-        txtAdress.setText(newFriend.getAddress());
-        txtPhone.setText(newFriend.getPhone() + "");
-        txtMail.setText(newFriend.getMail());
-        txtWeb.setText(newFriend.getWebsite());
-        txtBirthday.setText(newFriend.getBirthday());
-        ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.download));
-    }
-
-
-    public void callPhone()
+/*
+    public void smsPhone()
     {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +90,18 @@ public class FriendActivity extends AppCompatActivity {
                 intent.setData(Uri.parse("smsto:" + Uri.encode("40470903")));
                 startActivity(intent);
                 }
+        });
+    }*/
+
+    public void openMap(final Friend entry)
+    {
+        btnShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FriendActivity.this, Map_details.class);
+                intent.putExtra("FRIEND", entry);
+                startActivity(intent);
+            }
         });
     }
 }
