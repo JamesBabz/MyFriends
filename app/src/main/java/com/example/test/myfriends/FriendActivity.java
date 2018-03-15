@@ -46,24 +46,42 @@ public class FriendActivity extends AppCompatActivity {
         txtWeb = findViewById(R.id.txtWeb);
         ivPicture = findViewById(R.id.ivPicture);
 
+<<<<<<< HEAD
         button2 = findViewById(R.id.button2);
 
+=======
+        setFriendInfo();
+
+    }
+
+    private void setFriendInfo()
+    {
+>>>>>>> origin/Development
         Bundle extras = getIntent().getExtras();
 
-         String name = ((String) extras.getSerializable("Name"));
+        Friend friend = ((Friend) extras.getSerializable("FRIEND"));
 
-        txtName.setText(name);
-        createFriend();
+        txtName.setText(friend.getName());
+        txtAdress.setText(friend.getAddress());
+        txtPhone.setText(friend.getPhone() + "");
+        txtMail.setText(friend.getMail());
+        txtWeb.setText(friend.getWebsite());
+        txtBirthday.setText(friend.getBirthday());
+        ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.download));
 
         callPhone();
 
 
+<<<<<<< HEAD
     }
 
+=======
+>>>>>>> origin/Development
     public FriendActivity() {
         friendService = FriendService.getInstance();
     }
 
+<<<<<<< HEAD
     private void createFriend()
     {
         newFriend = new Friend(1, "Knud", "Storegade 23", null, 12345678,"knud@mail.dk", "knudshjemmeside.dk", "23-03-81", null);
@@ -89,5 +107,7 @@ public class FriendActivity extends AppCompatActivity {
                 }
         });
     }
+=======
+>>>>>>> origin/Development
 }
 

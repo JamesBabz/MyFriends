@@ -16,14 +16,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FriendActivity"
-            android:label="Friend Activity"
+        <activity
+            android:name=".FriendActivity"
+            android:label="Friend Activity"></activity>
+        <activity
+            android:name=".Map_details"
+            android:label="@string/title_activity_map_details"></activity>
 
-            >
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBnVgCSo_H8tb9lzVW-SmapXIhPn7SXeFk"/>
 
-
-
-        </activity>
     </application>
 
 </manifest>
