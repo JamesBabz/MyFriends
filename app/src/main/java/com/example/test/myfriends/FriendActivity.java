@@ -36,33 +36,28 @@ public class FriendActivity extends AppCompatActivity {
         txtWeb = findViewById(R.id.txtWeb);
         ivPicture = findViewById(R.id.ivPicture);
 
-        Bundle extras = getIntent().getExtras();
-
-         String name = ((String) extras.getSerializable("Name"));
-
-        txtName.setText(name);
-        createFriend();
+        setFriendInfo();
 
     }
 
+    private void setFriendInfo()
+    {
+        Bundle extras = getIntent().getExtras();
+
+        Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
+        txtName.setText(friend.getName());
+        txtAdress.setText(friend.getAddress());
+        txtPhone.setText(friend.getPhone() + "");
+        txtMail.setText(friend.getMail());
+        txtWeb.setText(friend.getWebsite());
+        txtBirthday.setText(friend.getBirthday());
+        ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.download));
+
+    }
 
     public FriendActivity() {
         friendService = FriendService.getInstance();
     }
 
-    private void createFriend()
-    {
-        Friend newFriend = new Friend(1, "Knud", "Storegade 23", null, 12345678,"knud@mail.dk", "knudshjemmeside.dk", "23-03-81", null);
-        friendService.createFriend(newFriend);
-
-
-
-        txtAdress.setText(newFriend.getAddress());
-        txtPhone.setText(newFriend.getPhone() + "");
-        txtMail.setText(newFriend.getMail());
-        txtWeb.setText(newFriend.getWebsite());
-        txtBirthday.setText(newFriend.getBirthday());
-        ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.download));
-
-    }
 }

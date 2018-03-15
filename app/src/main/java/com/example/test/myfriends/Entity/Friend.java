@@ -3,11 +3,13 @@ package com.example.test.myfriends.Entity;
 import android.location.Location;
 import android.media.Image;
 
+import java.io.Serializable;
+
 /**
  * Created by thomas on 12-03-2018.
  */
 
-public class Friend {
+public class Friend implements Serializable {
 
     private int id;
     private String name;
