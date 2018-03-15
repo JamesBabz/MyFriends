@@ -1,16 +1,22 @@
 package com.example.test.myfriends;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.test.myfriends.BLL.FriendService;
 import com.example.test.myfriends.Entity.Friend;
@@ -28,11 +34,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listViewFriends = findViewById(R.id.listViewFriends);
-createFriend();
+        createFriend();
         allFriends = friendService.getAllFriends();
         listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
         listViewFriends.setAdapter(listAdapter);
 
+        openFriendActivity();
 
     }
 
@@ -53,6 +60,28 @@ createFriend();
         friendService.createFriend(newFriend2);
         friendService.createFriend(newFriend3);
         friendService.createFriend(newFriend4);
+
+
+
+    }
+
+    private void openFriendActivity() {
+        listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+
+                Friend entry = (Friend) parent.getItemAtPosition(position);
+
+
+                Intent intent = new Intent(MainActivity.this, FriendActivity.class);
+                intent.putExtra("Name", entry.getName());
+                startActivity(intent);
+            }
+
+        });
+
+
     }
 }
 
@@ -70,6 +99,7 @@ class ListAdapter extends ArrayAdapter<Friend> {
         super(context, textViewResourceId, friends);
         this.friends = friends;
     }
+
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
@@ -90,12 +120,15 @@ class ListAdapter extends ArrayAdapter<Friend> {
 
         Friend friend = friends.get(position);
 
+
         TextView name = v.findViewById(R.id.twName);
         TextView phone = v.findViewById(R.id.twPhone);
+        ImageView picture = v.findViewById(R.id.imageViewFriend);
 
 
         name.setText(friend.getName());
         phone.setText(friend.getPhone() +"");
+
 
 
         return v;
