@@ -26,7 +26,7 @@ public class Map_details extends FragmentActivity implements OnMapReadyCallback 
 
     public Map_details() {
         Location location = new Location("");
-        friend = new Friend(1,"Bent","Spangsbjerg møllevej 62b", location, 12345678, "test@test.com", "www.test.dk", "11-07-89", null);
+        friend = new Friend(1,"Bent","Spangsbjerg møllevej 62b", 00.00, 00.00,  "12345678", "test@test.com", "www.test.dk", "11-07-89");
 
     }
 

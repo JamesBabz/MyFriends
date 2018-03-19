@@ -1,6 +1,8 @@
 package com.example.test.myfriends.BLL;
 
-import com.example.test.myfriends.DAL.FriendRepository;
+import android.content.Context;
+
+import com.example.test.myfriends.DAL.DAO;
 import com.example.test.myfriends.Entity.Friend;
 
 import java.util.ArrayList;
@@ -12,10 +14,13 @@ import java.util.ArrayList;
 public class FriendService {
 
     private static FriendService instance = null;
-    private FriendRepository repo;
 
-    private FriendService() {
-        repo = new FriendRepository();
+
+    private static DAO dao;
+
+    public static void setContext(Context c)
+    {
+        dao = new DAO(c);
     }
 
     public static FriendService getInstance( ) {
@@ -28,11 +33,12 @@ public class FriendService {
 
     public ArrayList<Friend> getAllFriends()
     {
-        return repo.getAllFriends();
+        return dao.getAll();
     }
+
     public void createFriend(Friend friend)
     {
-        repo.createFriend(friend);
+        dao.insert(friend);
     }
 
 
