@@ -35,6 +35,18 @@ public class Friend implements Serializable {
         this.picture = picture;
     }
 
+    public Friend(String name, String address, double altitude, double longitude, String phone, String mail, String website, String birthday, Image picture) {
+        this.name = name;
+        this.address = address;
+        Altitude = altitude;
+        Longitude = longitude;
+        this.phone = phone;
+        this.mail = mail;
+        this.website = website;
+        this.birthday = birthday;
+        this.picture = picture;
+    }
+
     public long getId() {
         return id;
     }
