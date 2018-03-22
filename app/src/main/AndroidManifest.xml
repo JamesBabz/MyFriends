@@ -35,8 +35,12 @@
             android:label="@string/title_activity_map_details"></activity>
 
         <activity
-            android:name=".CreateEditFriendActivity"
+            android:name=".CreateFriendActivity"
             android:label="Create"></activity>
+
+        <activity
+            android:name=".EditFriendActivity"
+            android:label="Edit"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
