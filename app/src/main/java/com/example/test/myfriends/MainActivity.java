@@ -1,22 +1,16 @@
 package com.example.test.myfriends;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -25,14 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.test.myfriends.BLL.FriendService;
-import com.example.test.myfriends.DAL.DAO;
 import com.example.test.myfriends.Entity.Friend;
 
-import java.io.Console;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.optAddFriend:
                     openDetailActivity();
-                    Toast toast = Toast.makeText(this, "Is clicked", Toast.LENGTH_LONG);
-                    toast.show();
                     return true;
                 case R.id.optClose:
                     closeApp();
@@ -88,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openDetailActivity(){
         Intent intent = new Intent();
-        intent.setClass(this, CreateEditFriendActivity.class);
+        intent.setClass(this, CreateFriendActivity.class);
         startActivity(intent);
 
     }

@@ -83,7 +83,7 @@ public class FriendActivity extends AppCompatActivity {
 
 
             Intent intent = new Intent();
-            intent.setClass(FriendActivity.this, CreateEditFriendActivity.class);
+            intent.setClass(FriendActivity.this, EditFriendActivity.class);
             intent.putExtra("FRIEND", friend);
             startActivity(intent);
         }

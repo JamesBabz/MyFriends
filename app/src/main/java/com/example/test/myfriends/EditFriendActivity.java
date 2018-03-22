@@ -11,10 +11,10 @@ import com.example.test.myfriends.BLL.FriendService;
 import com.example.test.myfriends.Entity.Friend;
 
 /**
- * Created by thomas on 22-03-2018.
+ * Created by Jacob on 22-03-2018.
  */
 
-public class CreateEditFriendActivity extends AppCompatActivity {
+public class EditFriendActivity extends AppCompatActivity {
 
     Button btnSave;
     Button btnDiscard;
@@ -40,30 +40,11 @@ public class CreateEditFriendActivity extends AppCompatActivity {
         txtBirthday = findViewById(R.id.ctxtBirthday);
         txtWebsite = findViewById(R.id.ctxtWebsite);
 
-        Bundle extras = getIntent().getExtras();
-        friend = ((Friend) extras.getSerializable("FRIEND"));
-
-        txtName.setText(friend.getName());
-        txtAddress.setText(friend.getAddress());
-        txtPhone.setText(friend.getPhone());
-        txtMail.setText(friend.getMail());
-        txtBirthday.setText(friend.getBirthday());
-        txtWebsite.setText(friend.getWebsite());
-
-
+        updateFriend();
     }
 
-    public CreateEditFriendActivity() {
+    public EditFriendActivity() {
         friendService = FriendService.getInstance();
-    }
-
-    public void CreateFriend(View v){
-
-        Friend newfriend = new Friend(txtName.getText().toString(), txtAddress.getText().toString(), 00.00, 00.00, txtPhone.getText().toString(), txtMail.getText().toString(), txtWebsite.getText().toString(), txtBirthday.getText().toString(), null);
-        friendService.createFriend(newfriend);
-
-        openMain();
-
     }
 
     public void onclickDiscard(View v)
@@ -78,16 +59,28 @@ public class CreateEditFriendActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void onClickSave(View v)
-    {
-        updateFriend();
-    }
-
     public void updateFriend()
     {
-        friend = new Friend(friend.getId(),txtName.getText().toString(), txtAddress.getText().toString(), 00.00, 00.00, txtPhone.getText().toString(), txtMail.getText().toString(), txtWebsite.getText().toString(), txtBirthday.getText().toString());
-        friendService.updateFriend(friend);
+        Bundle extras = getIntent().getExtras();
+        friend = ((Friend) extras.getSerializable("FRIEND"));
 
-        openMain();
+        txtName.setText(friend.getName());
+        txtAddress.setText(friend.getAddress());
+        txtPhone.setText(friend.getPhone());
+        txtMail.setText(friend.getMail());
+        txtBirthday.setText(friend.getBirthday());
+        txtWebsite.setText(friend.getWebsite());
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                friend = new Friend(friend.getId(),txtName.getText().toString(), txtAddress.getText().toString(), 00.00, 00.00, txtPhone.getText().toString(), txtMail.getText().toString(), txtWebsite.getText().toString(), txtBirthday.getText().toString());
+                friendService.updateFriend(friend);
+
+                openMain();
+            }
+        });
+
+
     }
 }
