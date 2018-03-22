@@ -11,12 +11,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.test.myfriends.BLL.FriendService;
 import com.example.test.myfriends.Entity.Friend;
 
 public class FriendActivity extends AppCompatActivity {
-
 
     TextView txtName;
     TextView txtAdress;
@@ -27,17 +27,16 @@ public class FriendActivity extends AppCompatActivity {
     ImageView ivPicture;
 
     Button btnShow;
+    Button btnDelete;
     ImageButton btnSms;
     ImageButton btnCall;
 
     private FriendService friendService;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-
 
         txtName = findViewById(R.id.txtName);
         txtAdress = findViewById(R.id.txtAdress);
@@ -47,14 +46,15 @@ public class FriendActivity extends AppCompatActivity {
         txtWeb = findViewById(R.id.txtWeb);
         ivPicture = findViewById(R.id.ivPicture);
 
-
         btnShow = findViewById(R.id.btnShow);
         btnSms = findViewById(R.id.btnSms);
         btnCall = findViewById(R.id.btnCall);
+        btnDelete = findViewById(R.id.btnDelete);
 
         smsPhone();
         callPhone();
         setFriendInfo();
+        deleteFriend();
 
     }
 
@@ -123,5 +123,26 @@ public class FriendActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void deleteFriend()
+    {
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+
+            Bundle extras = getIntent().getExtras();
+            Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
+            @Override
+            public void onClick(View view) {
+                friendService.deleteFriend(friend);
+
+
+                Toast.makeText(FriendActivity.this, "You deleted: " + friend.getName(),
+                        Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(FriendActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
 }
 
