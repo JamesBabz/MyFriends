@@ -30,10 +30,6 @@ public class FriendActivity extends AppCompatActivity {
     ImageButton btnSms;
     ImageButton btnCall;
 
-
-
-
-
     private FriendService friendService;
 
 

@@ -1,6 +1,8 @@
 package com.example.test.myfriends.BLL;
 
-import com.example.test.myfriends.DAL.FriendRepository;
+import android.content.Context;
+
+import com.example.test.myfriends.DAL.DAO;
 import com.example.test.myfriends.Entity.Friend;
 import com.example.test.myfriends.R;
 
@@ -16,10 +18,13 @@ import java.util.Locale;
 public class FriendService {
 
     private static FriendService instance = null;
-    private FriendRepository repo;
 
-    private FriendService() {
-        repo = new FriendRepository();
+
+    private static DAO dao;
+
+    public static void setContext(Context c)
+    {
+        dao = new DAO(c);
     }
 
     //Singleton
@@ -34,13 +39,13 @@ public class FriendService {
     // Returns all friends from repository
     public ArrayList<Friend> getAllFriends()
     {
-        return repo.getAllFriends();
+        return dao.getAll();
     }
-
-    //Sends the created friend from UI to the repository
+  
+    //Sends the created friend from UI to the DAO
     public void createFriend(Friend friend)
     {
-        repo.createFriend(friend);
+        dao.insert(friend);
     }
 
     //Checks if a friend has birthday

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.test.myfriends.BLL.FriendService;
+import com.example.test.myfriends.DAL.DAO;
 import com.example.test.myfriends.Entity.Friend;
 
 import java.text.SimpleDateFormat;
@@ -32,12 +33,15 @@ public class MainActivity extends AppCompatActivity {
     ListAdapter listAdapter;
     private FriendService friendService;
     private ArrayList<Friend> allFriends;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        friendService.setContext(this);
+
         listViewFriends = findViewById(R.id.listViewFriends);
-        createFriend();
+      //  createFriend();
         allFriends = friendService.getAllFriends();
         listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
         listViewFriends.setAdapter(listAdapter);
@@ -53,10 +57,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void createFriend()
     {
-        Friend newFriend = new Friend(1, "Knud", "Storegade 23", null, 12345678,"knud@mail.dk", "knudshjemmeside.dk", "15-03-1997", null);
-        Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", null, 12345678,"kristian@mail.dk", "kristianshjemmeside.dk", "23-03-1981", null);
-        Friend newFriend3 = new Friend(3, "Simon", "Peder gade 44", null, 12345678,"simon@mail.dk", "simonshjemmeside.dk", "17-03-1981", null);
-        Friend newFriend4 = new Friend(4, "Hans", "Kirkevej 3", null, 12345678,"hans@mail.dk", "hanseshjemmeside.dk", "15-03-1981", null);
+        Friend newFriend = new Friend(1, "Knud", "Storegade 23", 00.00, 00.00, "12345678","knud@mail.dk", "knudshjemmeside.dk", "23-03-81");
+        Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", 00.00, 00.00, "12345678","kristian@mail.dk", "kristianshjemmeside.dk", "23-03-81");
+        Friend newFriend3 = new Friend(3, "Simon", "Peder gade 44", 00.00, 00.00, "12345678","simon@mail.dk", "simonshjemmeside.dk", "23-03-81");
+        Friend newFriend4 = new Friend(4, "Hans", "Kirkevej 3", 00.00, 00.00, "12345678","hans@mail.dk", "hanseshjemmeside.dk", "23-03-81");
+
         friendService.createFriend(newFriend);
         friendService.createFriend(newFriend2);
         friendService.createFriend(newFriend3);
@@ -145,6 +150,7 @@ class ListAdapter extends ArrayAdapter<Friend> {
 
         return v;
     }
+
 
 }
 

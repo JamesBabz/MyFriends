@@ -11,21 +11,23 @@ import java.io.Serializable;
 
 public class Friend implements Serializable {
 
-    private int id;
+    private long id;
     private String name;
     private String address;
-    private Location location;
-    private int phone;
+    private double Altitude;
+    private double Longitude;
+    private String phone;
     private String mail;
     private String website;
     private String birthday;
     private Image picture;
 
-    public Friend(int id, String name, String address, Location location, int phone, String mail, String website, String birthday, Image picture) {
+    public Friend(int id, String name, String address, Double Altitude, Double Longitude, String phone, String mail, String website, String birthday) {
         this.id = id;
         this.name = name;
         this.address = address;
-        this.location = location;
+        this.Altitude = Altitude;
+        this.Longitude = Longitude;
         this.phone = phone;
         this.mail = mail;
         this.website = website;
@@ -33,11 +35,11 @@ public class Friend implements Serializable {
         this.picture = picture;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -57,19 +59,28 @@ public class Friend implements Serializable {
         this.address = address;
     }
 
-    public Location getLocation() {
-        return location;
+    public double getAltitude() {
+        return Altitude;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setAltitude(double altitude) {
+        Altitude = altitude;
     }
 
-    public int getPhone() {
+    public double getLongitude() {
+
+        return Longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        Longitude = longitude;
+    }
+
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
