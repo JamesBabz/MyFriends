@@ -1,16 +1,22 @@
 package com.example.test.myfriends;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -22,6 +28,7 @@ import com.example.test.myfriends.BLL.FriendService;
 import com.example.test.myfriends.DAL.DAO;
 import com.example.test.myfriends.Entity.Friend;
 
+import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         friendService.setContext(this);
 
         listViewFriends = findViewById(R.id.listViewFriends);
-      //  createFriend();
+     // createFriend();
         allFriends = friendService.getAllFriends();
         listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
         listViewFriends.setAdapter(listAdapter);
@@ -53,6 +60,43 @@ public class MainActivity extends AppCompatActivity {
     public MainActivity() {
 
         friendService = FriendService.getInstance();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.top_main_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+            switch (item.getItemId()) {
+                case R.id.optAddFriend:
+                    openDetailActivity();
+                    Toast toast = Toast.makeText(this, "Is clicked", Toast.LENGTH_LONG);
+                    toast.show();
+                    return true;
+                case R.id.optClose:
+                    closeApp();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+    }
+
+    private void openDetailActivity(){
+        Intent intent = new Intent();
+        intent.setClass(this, CreateEditFriendActivity.class);
+        startActivity(intent);
+
+    }
+
+
+
+    private void closeApp() {
+        finish();
     }
 
     private void createFriend()

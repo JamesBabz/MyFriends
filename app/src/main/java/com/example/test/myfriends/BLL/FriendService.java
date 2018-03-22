@@ -48,6 +48,12 @@ public class FriendService {
         dao.insert(friend);
     }
 
+    //Sends the created friend from UI to the DAO
+    public void deleteFriend(Friend friend)
+    {
+        dao.deleteById(friend.getId());
+    }
+
     //Checks if a friend has birthday
     public boolean isItBirthday(String birthday)
     {

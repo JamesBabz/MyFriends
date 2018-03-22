@@ -94,6 +94,11 @@ public class DAO {
         return getAll().get(index);
     }
 
+    public void deleteById(long id)
+    {
+        this.db.delete(TABLE_NAME, "id = " + id, null);
+    }
+
 
     private static class OpenHelper extends SQLiteOpenHelper {
 
