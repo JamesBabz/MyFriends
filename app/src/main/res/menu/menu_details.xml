@@ -4,19 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
     <item
-        android:id="@+id/edit"
+        android:id="@+id/menuEdit"
         android:title="Edit"
-        app:showAsAction="never
-" />
+        app:showAsAction="always"
+ />
 
     <item
-        android:id="@+id/delete"
+        android:id="@+id/menuDelete"
         android:title="Delete"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 
-    <item
-        android:id="@+id/exit"
-        android:title="Exit"
-        app:showAsAction="never" />
 
 </menu>

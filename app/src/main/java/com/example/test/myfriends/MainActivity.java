@@ -187,10 +187,10 @@ class ListAdapter extends ArrayAdapter<Friend> {
         picture.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
 
         //Sets the image of Dannebrog if the friend has birthday
-        if(friendService.isItBirthday(friend.getBirthday()))
+       /* if(friendService.isItBirthday(friend.getBirthday()))
         {
             birthday.setImageDrawable(context.getResources().getDrawable(R.drawable.dannebrog));
-        }
+        }*/
 
         return v;
     }
