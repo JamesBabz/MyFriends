@@ -71,8 +71,7 @@ public class FriendActivity extends AppCompatActivity {
     {
         int id = item.getItemId();
 
-
-        if(id == R.id.delete)
+        if(id == R.id.menuDelete)
         {
             deleteAlertBox();
         }

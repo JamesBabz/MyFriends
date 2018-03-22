@@ -54,6 +54,12 @@ public class FriendService {
         dao.deleteById(friend.getId());
     }
 
+    //Updates the chosen friend
+    public void updateFriend(String Id, String name, String address, double altitude, double longitude, int phone, String mail, String website, String birthday)
+    {
+        dao.updateFriend(Id, name, address, altitude, longitude, phone, mail, website, birthday);
+    }
+
     //Checks if a friend has birthday
     public boolean isItBirthday(String birthday)
     {

@@ -1,5 +1,6 @@
 package com.example.test.myfriends.DAL;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -98,6 +99,23 @@ public class DAO {
     {
         this.db.delete(TABLE_NAME, "id = " + id, null);
     }
+
+    public boolean updateFriend(String Id, String name, String address, double altitude, double longitude, int phone, String mail, String website, String birthday) {
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("COL_1", name);
+        contentValues.put("COL_2",address);
+        contentValues.put("COL_3", altitude);
+        contentValues.put("COL_4", longitude);
+        contentValues.put("COL_5", phone);
+        contentValues.put("COL_6", mail);
+        contentValues.put("COL_7", website);
+        contentValues.put("COL_8", birthday);
+
+        db.update(TABLE_NAME, contentValues, "ID = ?",new String[] { Id });
+        return true;
+    }
+
 
 
     private static class OpenHelper extends SQLiteOpenHelper {
