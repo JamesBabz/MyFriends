@@ -24,6 +24,7 @@ public class CreateEditFriendActivity extends AppCompatActivity {
     EditText txtAddress;
     EditText txtBirthday;
     EditText txtWebsite;
+    Friend friend;
 
     FriendService friendService;
     @Override
@@ -38,6 +39,17 @@ public class CreateEditFriendActivity extends AppCompatActivity {
         txtAddress = findViewById(R.id.ctxtAddress);
         txtBirthday = findViewById(R.id.ctxtBirthday);
         txtWebsite = findViewById(R.id.ctxtWebsite);
+
+        Bundle extras = getIntent().getExtras();
+        friend = ((Friend) extras.getSerializable("FRIEND"));
+
+        txtName.setText(friend.getName());
+        txtAddress.setText(friend.getAddress());
+        txtPhone.setText(friend.getPhone());
+        txtMail.setText(friend.getMail());
+        txtBirthday.setText(friend.getBirthday());
+        txtWebsite.setText(friend.getWebsite());
+
 
     }
 
@@ -64,5 +76,18 @@ public class CreateEditFriendActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    public void onClickSave(View v)
+    {
+        updateFriend();
+    }
+
+    public void updateFriend()
+    {
+        friend = new Friend(friend.getId(),txtName.getText().toString(), txtAddress.getText().toString(), 00.00, 00.00, txtPhone.getText().toString(), txtMail.getText().toString(), txtWebsite.getText().toString(), txtBirthday.getText().toString());
+        friendService.updateFriend(friend);
+
+        openMain();
     }
 }

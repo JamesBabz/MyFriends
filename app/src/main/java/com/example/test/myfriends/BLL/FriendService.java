@@ -55,9 +55,9 @@ public class FriendService {
     }
 
     //Updates the chosen friend
-    public void updateFriend(String Id, String name, String address, double altitude, double longitude, int phone, String mail, String website, String birthday)
+    public void updateFriend(Friend friend)
     {
-        dao.updateFriend(Id, name, address, altitude, longitude, phone, mail, website, birthday);
+        dao.updateFriend(friend);
     }
 
     //Checks if a friend has birthday

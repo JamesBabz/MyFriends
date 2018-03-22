@@ -90,33 +90,33 @@ public class DAO {
         return list;
     }
 
-    public Friend getByIndex(int index)
-    {
-        return getAll().get(index);
-    }
-
     public void deleteById(long id)
     {
         this.db.delete(TABLE_NAME, "id = " + id, null);
     }
 
-    public boolean updateFriend(String Id, String name, String address, double altitude, double longitude, int phone, String mail, String website, String birthday) {
+    public void deleteAll() {
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("COL_1", name);
-        contentValues.put("COL_2",address);
-        contentValues.put("COL_3", altitude);
-        contentValues.put("COL_4", longitude);
-        contentValues.put("COL_5", phone);
-        contentValues.put("COL_6", mail);
-        contentValues.put("COL_7", website);
-        contentValues.put("COL_8", birthday);
-
-        db.update(TABLE_NAME, contentValues, "ID = ?",new String[] { Id });
-        return true;
+        this.db.delete(TABLE_NAME, null, null);
     }
 
+    public boolean updateFriend(Friend friend) {
 
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id", friend.getId());
+        contentValues.put("name", friend.getName());
+        contentValues.put("address", friend.getAddress());
+        contentValues.put("altitude", friend.getAltitude());
+        contentValues.put("longitude", friend.getLongitude());
+        contentValues.put("phone", friend.getPhone());
+        contentValues.put("mail", friend.getMail());
+        contentValues.put("website", friend.getWebsite());
+        contentValues.put("birthday", friend.getBirthday());
+
+        db.update(TABLE_NAME, contentValues, "ID = ?",new String[] { friend.getId() + "" });
+
+        return true;
+    }
 
     private static class OpenHelper extends SQLiteOpenHelper {
 
@@ -139,5 +139,4 @@ public class DAO {
             onCreate(db);
         }
     }
-
 }
