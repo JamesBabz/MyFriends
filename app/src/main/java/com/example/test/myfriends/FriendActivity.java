@@ -1,11 +1,15 @@
 package com.example.test.myfriends;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -27,7 +31,6 @@ public class FriendActivity extends AppCompatActivity {
     ImageView ivPicture;
 
     Button btnShow;
-    Button btnDelete;
     ImageButton btnSms;
     ImageButton btnCall;
 
@@ -49,14 +52,34 @@ public class FriendActivity extends AppCompatActivity {
         btnShow = findViewById(R.id.btnShow);
         btnSms = findViewById(R.id.btnSms);
         btnCall = findViewById(R.id.btnCall);
-        btnDelete = findViewById(R.id.btnDelete);
 
         smsPhone();
         callPhone();
         setFriendInfo();
-        deleteFriend();
-
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        int id = item.getItemId();
+
+
+        if(id == R.id.delete)
+        {
+            deleteAlertBox();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void setFriendInfo()
     {
@@ -126,23 +149,40 @@ public class FriendActivity extends AppCompatActivity {
 
     public void deleteFriend()
     {
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-
             Bundle extras = getIntent().getExtras();
             Friend friend = ((Friend) extras.getSerializable("FRIEND"));
 
-            @Override
-            public void onClick(View view) {
+
                 friendService.deleteFriend(friend);
 
 
-                Toast.makeText(FriendActivity.this, "You deleted: " + friend.getName(),
+                Toast.makeText(FriendActivity.this, "You deleted " + friend.getName(),
                         Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(FriendActivity.this, MainActivity.class);
                 startActivity(intent);
             }
-        });
+
+            public void deleteAlertBox()
+            {
+                Bundle extras = getIntent().getExtras();
+                Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
+
+                new AlertDialog.Builder(this)
+                        .setTitle("Delete")
+                        .setMessage("Do you really want to delete " + friend.getName() + "?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                deleteFriend();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
+            }
+
     }
 
-}
+
+
 
