@@ -1,9 +1,15 @@
 package com.example.test.myfriends;
 
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,8 +25,20 @@ import android.widget.Toast;
 
 import com.example.test.myfriends.BLL.FriendService;
 import com.example.test.myfriends.Entity.Friend;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FriendActivity extends AppCompatActivity {
+
+    private final static String LOGTAG = "Camera01";
+    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+
+    File mFile;
 
     TextView txtName;
     TextView txtAdress;
@@ -58,6 +76,7 @@ public class FriendActivity extends AppCompatActivity {
         setFriendInfo();
         sendMail();
         openWebsite();
+        takePicture();
     }
 
 
@@ -234,7 +253,78 @@ public class FriendActivity extends AppCompatActivity {
                         .setNegativeButton(android.R.string.no, null).show();
             }
 
+            private void takePicture()
+            {
+                ivPicture.setOnClickListener(new View.OnClickListener() {
+
+                    Bundle extras = getIntent().getExtras();
+                    Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
+                    @Override
+                    public void onClick(View view) {
+                        onClickTakePics();
+                    }
+                });
+            }
+
+    private void onClickTakePics()
+    {
+
+        mFile = getOutputMediaFile(); // create a file to save the image
+        if (mFile == null)
+        {
+            Toast.makeText(this, "Could not create file...", Toast.LENGTH_LONG).show();
+            return;
+        }
+        // create Intent to take a picture
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mFile));
+
+        // start the image capture Intent
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+
     }
+
+
+    /** Create a File for saving an image */
+    private File getOutputMediaFile(){
+
+
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "Camera01");
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String postfix = "jpg";
+        String prefix = "IMG";
+
+        File mediaFile = new File(mediaStorageDir.getPath() +
+                File.separator + prefix +
+                "_"+ timeStamp + "." + postfix);
+
+        return mediaFile;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                showPictureTaken(mFile);
+
+            } else
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Canceled...", Toast.LENGTH_LONG).show();
+                return;
+
+            } else
+                Toast.makeText(this, "Picture NOT taken - unknown error...", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void showPictureTaken(File f) {
+        Picasso.with(this).load(Uri.fromFile(f)).into(ivPicture);
+    }
+}
 
 
 
