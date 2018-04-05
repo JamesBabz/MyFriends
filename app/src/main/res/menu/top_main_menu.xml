@@ -12,4 +12,18 @@
     android:id="@+id/optClose"
     android:title="Close"
     app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/optSortByName"
+        android:title="Sort by name"
+        app:showAsAction="never"/>
+   <!-- <item
+        android:id="@+id/optSortByDistance"
+        android:title="Sort by distance"
+        app:showAsAction="never"/>-->
+    <item
+        android:id="@+id/optSortByDefault"
+        android:title="Sort by default"
+        app:showAsAction="never"/>
 </menu>
+
