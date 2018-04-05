@@ -57,6 +57,7 @@ public class FriendActivity extends AppCompatActivity {
         callPhone();
         setFriendInfo();
         sendMail();
+        openWebsite();
     }
 
 
@@ -164,6 +165,25 @@ public class FriendActivity extends AppCompatActivity {
 
                 /* Send it off to the Activity-Chooser */
                 startActivity(Intent.createChooser(intent,"Send"));
+            }
+        });
+    }
+
+    public void openWebsite()
+    {
+        txtWeb.setOnClickListener(new View.OnClickListener() {
+
+            Bundle extras = getIntent().getExtras();
+            Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+            String url = friend.getWebsite();
+
+            @Override
+            public void onClick(View view) {
+                if (!url.startsWith("https://") && !url.startsWith("http://")){
+                    url = "http://" + url;
+                }
+                Intent openUrlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(openUrlIntent);
             }
         });
     }
