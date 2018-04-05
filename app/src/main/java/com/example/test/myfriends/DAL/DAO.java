@@ -1,5 +1,6 @@
 package com.example.test.myfriends.DAL;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -89,16 +90,33 @@ public class DAO {
         return list;
     }
 
-    public Friend getByIndex(int index)
-    {
-        return getAll().get(index);
-    }
-
     public void deleteById(long id)
     {
         this.db.delete(TABLE_NAME, "id = " + id, null);
     }
 
+    public void deleteAll() {
+
+        this.db.delete(TABLE_NAME, null, null);
+    }
+
+    public boolean updateFriend(Friend friend) {
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("id", friend.getId());
+        contentValues.put("name", friend.getName());
+        contentValues.put("address", friend.getAddress());
+        contentValues.put("altitude", friend.getAltitude());
+        contentValues.put("longitude", friend.getLongitude());
+        contentValues.put("phone", friend.getPhone());
+        contentValues.put("mail", friend.getMail());
+        contentValues.put("website", friend.getWebsite());
+        contentValues.put("birthday", friend.getBirthday());
+
+        db.update(TABLE_NAME, contentValues, "ID = ?",new String[] { friend.getId() + "" });
+
+        return true;
+    }
 
     private static class OpenHelper extends SQLiteOpenHelper {
 
@@ -121,5 +139,4 @@ public class DAO {
             onCreate(db);
         }
     }
-
 }

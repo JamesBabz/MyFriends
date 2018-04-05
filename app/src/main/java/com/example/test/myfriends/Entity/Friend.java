@@ -22,7 +22,7 @@ public class Friend implements Serializable {
     private String birthday;
     private Image picture;
 
-    public Friend(int id, String name, String address, Double Altitude, Double Longitude, String phone, String mail, String website, String birthday) {
+    public Friend(long id, String name, String address, Double Altitude, Double Longitude, String phone, String mail, String website, String birthday) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -32,7 +32,6 @@ public class Friend implements Serializable {
         this.mail = mail;
         this.website = website;
         this.birthday = birthday;
-        this.picture = picture;
     }
 
     public Friend(String name, String address, double altitude, double longitude, String phone, String mail, String website, String birthday, Image picture) {

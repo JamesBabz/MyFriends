@@ -72,9 +72,20 @@ public class FriendActivity extends AppCompatActivity {
         int id = item.getItemId();
 
 
-        if(id == R.id.delete)
+        if(id == R.id.menuDelete)
         {
             deleteAlertBox();
+        }
+        else if (id == R.id.menuEdit)
+        {
+            Bundle extras = getIntent().getExtras();
+            Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
+
+            Intent intent = new Intent();
+            intent.setClass(FriendActivity.this, EditFriendActivity.class);
+            intent.putExtra("FRIEND", friend);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
