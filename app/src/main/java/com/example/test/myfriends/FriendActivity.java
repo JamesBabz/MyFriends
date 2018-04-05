@@ -56,6 +56,8 @@ public class FriendActivity extends AppCompatActivity {
         smsPhone();
         callPhone();
         setFriendInfo();
+        sendMail();
+        openWebsite();
     }
 
 
@@ -142,6 +144,46 @@ public class FriendActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + friend.getPhone() + ""));
                 startActivity(intent);
+            }
+        });
+    }
+
+    public void sendMail()
+    {
+        txtMail.setOnClickListener(new View.OnClickListener() {
+
+            Bundle extras = getIntent().getExtras();
+            Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("message/rfc822");
+                intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] {friend.getMail()});
+                intent.putExtra(android.content.Intent.EXTRA_SUBJECT,"");
+                intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
+
+                /* Send it off to the Activity-Chooser */
+                startActivity(Intent.createChooser(intent,"Send"));
+            }
+        });
+    }
+
+    public void openWebsite()
+    {
+        txtWeb.setOnClickListener(new View.OnClickListener() {
+
+            Bundle extras = getIntent().getExtras();
+            Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+            String url = friend.getWebsite();
+
+            @Override
+            public void onClick(View view) {
+                if (!url.startsWith("https://") && !url.startsWith("http://")){
+                    url = "http://" + url;
+                }
+                Intent openUrlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(openUrlIntent);
             }
         });
     }
