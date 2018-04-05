@@ -38,29 +38,33 @@
         android:layout_centerHorizontal="true"/>
 
     <GridLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/grid1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="4"
-        android:rowCount="5"
-        android:layout_below="@id/txtName">
+        android:rowCount="2"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/txtName">
+
         <TextView
             android:id="@+id/txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
+            android:layout_width="70dp"
+            android:layout_height="20dp"
             android:text="Address:"
             android:textSize="15dp" />
 
         <TextView
             android:id="@+id/txtAdress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
+            android:layout_width="115dp"
+            android:layout_height="20dp"
+            android:paddingRight="10dp"
             android:textSize="15dp" />
 
         <Button
             android:id="@+id/btnHome"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
             android:onClick="setHomeAddress"
@@ -75,9 +79,8 @@
 
         <TextView
             android:id="@+id/textView5"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
             android:text="Phone:"
             android:textSize="15dp" />
 
@@ -85,7 +88,6 @@
             android:id="@+id/txtPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
             android:textSize="15dp" />
 
         <ImageButton
@@ -108,10 +110,19 @@
             android:layout_gravity="center"
             android:src="@drawable/ic_chat_black_24dp"
             android:text="SMS" />
+    </GridLayout>
 
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="3"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@id/grid1">
         <TextView
             android:id="@+id/textView4"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
             android:text="Mail:"
@@ -125,20 +136,11 @@
             android:textSize="15dp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
             android:text="Birthday:"
-            android:paddingRight="15dp"
             android:textSize="15dp" />
 
         <TextView
@@ -147,14 +149,6 @@
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
             android:textSize="15dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/textView2"
@@ -180,7 +174,6 @@
             android:layout_height="wrap_content"/>
 
     </GridLayout>
-
 
 
 </RelativeLayout>
