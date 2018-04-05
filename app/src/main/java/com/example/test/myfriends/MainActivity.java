@@ -45,9 +45,17 @@ public class MainActivity extends AppCompatActivity {
         addListenerOnList();
 
     }
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        allFriends = friendService.getAllFriends();
+        listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
+        listViewFriends.setAdapter(listAdapter);
+    }
+
 
     public MainActivity() {
-
         friendService = FriendService.getInstance();
     }
 
