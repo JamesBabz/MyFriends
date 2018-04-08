@@ -1,22 +1,16 @@
 package com.example.test.myfriends;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -25,14 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.test.myfriends.BLL.FriendService;
-import com.example.test.myfriends.DAL.DAO;
 import com.example.test.myfriends.Entity.Friend;
 
-import java.io.Console;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,20 +34,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        friendService = FriendService.getInstance();
         friendService.setContext(this);
 
         listViewFriends = findViewById(R.id.listViewFriends);
-     // createFriend();
+       // createFriend();
         allFriends = friendService.getAllFriends();
         listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
         listViewFriends.setAdapter(listAdapter);
 
         addListenerOnList();
-
+    }
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        allFriends = friendService.getAllFriends();
+        listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
+        listViewFriends.setAdapter(listAdapter);
     }
 
-    public MainActivity() {
 
+    public MainActivity() {
         friendService = FriendService.getInstance();
     }
 
@@ -75,20 +72,42 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.optAddFriend:
                     openDetailActivity();
-                    Toast toast = Toast.makeText(this, "Is clicked", Toast.LENGTH_LONG);
-                    toast.show();
                     return true;
                 case R.id.optClose:
                     closeApp();
+                    return true;
+                case R.id.optSortByName:
+                    sortListByName();
+                    return true;
+               /* case R.id.optSortByDistance:
+                    sortListByDistance();
+                    return true;*/
+                case R.id.optSortByDefault:
+                    sortListByDefault();
                     return true;
                 default:
                     return super.onOptionsItemSelected(item);
             }
     }
 
+    private void sortListByName(){
+        allFriends = friendService.sortListByName();
+        listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
+        listViewFriends.setAdapter(listAdapter);
+
+    }
+
+    // private void sortListByDistance(){}
+
+    private void sortListByDefault(){
+        allFriends = friendService.getAllFriends();
+        listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
+        listViewFriends.setAdapter(listAdapter);
+    }
+
     private void openDetailActivity(){
         Intent intent = new Intent();
-        intent.setClass(this, CreateEditFriendActivity.class);
+        intent.setClass(this, CreateFriendActivity.class);
         startActivity(intent);
 
     }
@@ -101,16 +120,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void createFriend()
     {
-        Friend newFriend = new Friend(1, "Knud", "Storegade 23", 00.00, 00.00, "12345678","knud@mail.dk", "knudshjemmeside.dk", "23-03-81");
-        Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", 00.00, 00.00, "12345678","kristian@mail.dk", "kristianshjemmeside.dk", "23-03-81");
-        Friend newFriend3 = new Friend(3, "Simon", "Peder gade 44", 00.00, 00.00, "12345678","simon@mail.dk", "simonshjemmeside.dk", "23-03-81");
-        Friend newFriend4 = new Friend(4, "Hans", "Kirkevej 3", 00.00, 00.00, "12345678","hans@mail.dk", "hanseshjemmeside.dk", "23-03-81");
 
-        friendService.createFriend(newFriend);
+        Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", 00.00, 00.00, "12345678","kristian@mail.dk", "kristianshjemmeside.dk", "05-04-81");
+        Friend newFriend3 = new Friend(1, "Simon", "Pedergade 44", 00.00, 00.00, "12345678","simon@mail.dk", "simonshjemmeside.dk", "23-03-81");
+        Friend newFriend4 = new Friend(4, "Hans", "Kirkevej 3", 00.00, 00.00, "12345678","hans@mail.dk", "hanseshjemmeside.dk", "23-03-81");
+        Friend newFriend = new Friend(3, "Knud", "Skolegade 23", 00.00, 00.00, "12345678","knud@mail.dk", "knudshjemmeside.dk", "05-03-81");
+
         friendService.createFriend(newFriend2);
         friendService.createFriend(newFriend3);
         friendService.createFriend(newFriend4);
-
+        friendService.createFriend(newFriend);
 
 
     }
@@ -160,17 +179,12 @@ class ListAdapter extends ArrayAdapter<Friend> {
     @Override
     public View getView(int position, View v, ViewGroup parent) {
 
-        String TAG = "tag";
-
         if (v == null) {
             LayoutInflater li = (LayoutInflater) getContext().getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
 
             v = li.inflate(R.layout.cell_extended, parent,false);
-            Log.d(TAG, "Position: " + position + " View Reused");
         }
-        else
-            Log.d(TAG, "Position: " + position + " View Reused");
 
         v.setBackgroundColor(colors[position % colors.length]);
 
@@ -184,9 +198,11 @@ class ListAdapter extends ArrayAdapter<Friend> {
 
         name.setText(friend.getName());
         phone.setText(friend.getPhone() +"");
+        birthday.setImageResource(0);
         picture.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
 
         //Sets the image of Dannebrog if the friend has birthday
+        // Get the retun value from the method in friendService, if true, set a image
         if(friendService.isItBirthday(friend.getBirthday()))
         {
             birthday.setImageDrawable(context.getResources().getDrawable(R.drawable.dannebrog));
