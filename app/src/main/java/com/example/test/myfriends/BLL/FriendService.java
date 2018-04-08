@@ -42,7 +42,7 @@ public class FriendService {
     public static FriendService getInstance( ) {
         if (instance == null)
         {
-            return new FriendService();
+            instance = new FriendService();
         }
         return instance;
     }
