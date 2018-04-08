@@ -9,20 +9,14 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/ivPicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0"
-        android:scaleType="center"
-        android:paddingTop="15dp"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        app:riv_border_color="#333333"
-        app:riv_border_width="0dip"
-        app:riv_corner_radius="0dip"
-        app:riv_mutate_background="true"
+        android:layout_marginTop="66dp"
+        android:adjustViewBounds="true"
+        android:visibility="visible"
         app:riv_oval="true"
-        app:riv_tile_mode="repeat"
         tools:layout_editor_absoluteX="204dp"
         tools:layout_editor_absoluteY="32dp" />
 

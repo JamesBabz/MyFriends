@@ -20,10 +20,9 @@ public class Friend implements Serializable {
     private String mail;
     private String website;
     private String birthday;
-    private Image picture;
+    private String picture;
 
-    public Friend(long id, String name, String address, Double Altitude, Double Longitude, String phone, String mail, String website, String birthday) {
-        this.id = id;
+    /*public Friend(long id, String name, String address, Double Altitude, Double Longitude, String phone, String mail, String website, String birthday) {
         this.name = name;
         this.address = address;
         this.Altitude = Altitude;
@@ -32,9 +31,10 @@ public class Friend implements Serializable {
         this.mail = mail;
         this.website = website;
         this.birthday = birthday;
-    }
+    }*/
 
-    public Friend(String name, String address, double altitude, double longitude, String phone, String mail, String website, String birthday, Image picture) {
+    public Friend(long id, String name, String address, double altitude, double longitude, String phone, String mail, String website, String birthday, String picture) {
+        this.id = id;
         this.name = name;
         this.address = address;
         Altitude = altitude;
@@ -119,11 +119,11 @@ public class Friend implements Serializable {
         this.birthday = birthday;
     }
 
-    public Image getPicture() {
+    public String getPicture() {
         return picture;
     }
 
-    public void setPicture(Image picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 }

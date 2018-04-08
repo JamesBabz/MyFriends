@@ -1,40 +1,75 @@
 package com.example.test.myfriends;
 
+
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
+
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+
+import android.media.ExifInterface;
+import android.media.Image;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.test.myfriends.BLL.FriendService;
 import com.example.test.myfriends.Entity.Friend;
+import com.squareup.picasso.Picasso;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class FriendActivity extends AppCompatActivity {
+
+    private static final String TAG = "MyActivity";
+    private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+
+    File mFile;
+    Uri uriSavedImage;
 
     TextView txtName;
     TextView txtAdress;
@@ -45,8 +80,11 @@ public class FriendActivity extends AppCompatActivity {
     ImageView ivPicture;
     Geocoder geocoder;
     Friend friend;
+    Bitmap bitmap;
+    Bitmap rotatedBitmap;
 
     Button btnShow;
+    ImageButton btnDelete;
     ImageButton btnSms;
     ImageButton btnCall;
 
@@ -54,10 +92,13 @@ public class FriendActivity extends AppCompatActivity {
     private FusedLocationProviderClient mFusedLocationClient;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+
 
         txtName = findViewById(R.id.txtName);
         txtAdress = findViewById(R.id.txtAdress);
@@ -67,19 +108,30 @@ public class FriendActivity extends AppCompatActivity {
         txtWeb = findViewById(R.id.txtWeb);
         ivPicture = findViewById(R.id.ivPicture);
 
+
         btnShow = findViewById(R.id.btnShow);
         btnSms = findViewById(R.id.btnSms);
         btnCall = findViewById(R.id.btnCall);
+        btnDelete = findViewById(R.id.menuDelete);
 
         Bundle extras = getIntent().getExtras();
         friend = ((Friend) extras.getSerializable("FRIEND"));
+
 
         smsPhone();
         callPhone();
         setFriendInfo();
         sendMail();
         openWebsite();
+        takePicture();
         openMap(friend);
+
+
+
+    }
+
+    public FriendActivity() {
+        friendService = FriendService.getInstance();
 
     }
 
@@ -182,15 +234,17 @@ public class FriendActivity extends AppCompatActivity {
         txtMail.setText(friend.getMail());
         txtWeb.setText(friend.getWebsite());
         txtBirthday.setText(friend.getBirthday());
-        ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.download));
 
+        if (friend.getPicture().equals(""))
+        {
+            ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.placeholder));
+        }
+        else
+        {
+
+            ivPicture.setImageURI(Uri.parse(friend.getPicture()));
+        }
     }
-
-
-    public FriendActivity() {
-        friendService = FriendService.getInstance();
-    }
-
 
     public void smsPhone() {
         btnSms.setOnClickListener(new View.OnClickListener() {
@@ -275,21 +329,16 @@ public class FriendActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         Friend friend = ((Friend) extras.getSerializable("FRIEND"));
 
-
         friendService.deleteFriend(friend);
 
+        openMain();
 
         Toast.makeText(FriendActivity.this, "You deleted " + friend.getName(),
                 Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(FriendActivity.this, MainActivity.class);
-        startActivity(intent);
+
     }
 
     public void deleteAlertBox() {
-        Bundle extras = getIntent().getExtras();
-        Friend friend = ((Friend) extras.getSerializable("FRIEND"));
-
-
         new AlertDialog.Builder(this)
                 .setTitle("Delete")
                 .setMessage("Do you really want to delete " + friend.getName() + "?")
@@ -301,9 +350,152 @@ public class FriendActivity extends AppCompatActivity {
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).show();
+
+
+    }
+
+
+            private void takePicture()
+            {
+                ivPicture.setOnClickListener(new View.OnClickListener() {
+
+                    Bundle extras = getIntent().getExtras();
+                    Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
+                    @Override
+                    public void onClick(View view) {
+                        onClickTakePics();
+                    }
+                });
+            }
+
+    private String appFolderCheckandCreate(){
+
+        String appFolderPath="";
+        File externalStorage = Environment.getExternalStorageDirectory();
+
+        if (externalStorage.canWrite())
+        {
+            appFolderPath = externalStorage.getAbsolutePath() + "/MyApp";
+            File dir = new File(appFolderPath);
+
+            if (!dir.exists())
+            {
+                dir.mkdirs();
+            }
+
+        }
+        else
+        {
+            //showToast("  Storage media not found or is full ! ");
+        }
+
+        return appFolderPath;
+    }
+
+
+
+    private String getTimeStamp() {
+
+        final long timestamp = new Date().getTime();
+
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp);
+
+        final String timeString = new SimpleDateFormat("HH_mm_ss_SSS").format(cal.getTime());
+
+
+        return timeString;}
+
+    private void onClickTakePics()
+    {
+        mFile = new File(appFolderCheckandCreate(), "img" + getTimeStamp() + ".jpg");
+        uriSavedImage = Uri.fromFile(mFile);
+
+        // create Intent to take a picture
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+        intent.putExtra("return-data", true);
+
+        // start the image capture Intent
+        startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                Bundle extras = getIntent().getExtras();
+                Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriSavedImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                ExifInterface ei = null;
+                try {
+                    ei = new ExifInterface(mFile + "");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_UNDEFINED);
+
+                rotatedBitmap = null;
+                switch (orientation) {
+
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        rotatedBitmap = rotateImage(bitmap, 90);
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        rotatedBitmap = rotateImage(bitmap, 180);
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        rotatedBitmap = rotateImage(bitmap, 270);
+                        break;
+
+                    case ExifInterface.ORIENTATION_NORMAL:
+                    default:
+                        rotatedBitmap = bitmap;
+                }
+
+                friend = new Friend(friend.getId(), friend.getName(), friend.getAddress(), 00.00, 00.00, friend.getPhone(), friend.getMail(), friend.getWebsite(), friend.getBirthday(), this.uriSavedImage + "");
+                friendService.updateFriend(friend);
+
+                ivPicture.setImageBitmap(rotatedBitmap);
+
+            } else
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Canceled...", Toast.LENGTH_LONG).show();
+                return;
+
+            } else
+                Toast.makeText(this, "Picture NOT taken - unknown error...", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void openMain()
+    {
+        Intent intent = new Intent();
+        intent.setClass(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
 }
+
+
 
 
 
