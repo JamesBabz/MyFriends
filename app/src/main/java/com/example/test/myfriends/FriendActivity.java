@@ -242,7 +242,7 @@ public class FriendActivity extends AppCompatActivity {
         else
         {
 
-            ivPicture.setImageBitmap(getAsBitmap());
+            ivPicture.setImageURI(Uri.parse(friend.getPicture()));
         }
     }
 
@@ -429,12 +429,45 @@ public class FriendActivity extends AppCompatActivity {
                 Bundle extras = getIntent().getExtras();
                 Friend friend = ((Friend) extras.getSerializable("FRIEND"));
 
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriSavedImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
+                ExifInterface ei = null;
+                try {
+                    ei = new ExifInterface(mFile + "");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_UNDEFINED);
+
+                rotatedBitmap = null;
+                switch (orientation) {
+
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        rotatedBitmap = rotateImage(bitmap, 90);
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        rotatedBitmap = rotateImage(bitmap, 180);
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        rotatedBitmap = rotateImage(bitmap, 270);
+                        break;
+
+                    case ExifInterface.ORIENTATION_NORMAL:
+                    default:
+                        rotatedBitmap = bitmap;
+                }
 
                 friend = new Friend(friend.getId(), friend.getName(), friend.getAddress(), 00.00, 00.00, friend.getPhone(), friend.getMail(), friend.getWebsite(), friend.getBirthday(), this.uriSavedImage + "");
                 friendService.updateFriend(friend);
 
-                ivPicture.setImageBitmap(getAsBitmap());
+                ivPicture.setImageBitmap(rotatedBitmap);
 
             } else
             if (resultCode == RESULT_CANCELED) {
@@ -460,44 +493,6 @@ public class FriendActivity extends AppCompatActivity {
                 matrix, true);
     }
 
-    public Bitmap getAsBitmap()
-    {
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), friend.getPicture());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ExifInterface ei = null;
-        try {
-            ei = new ExifInterface(mFile + "");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_UNDEFINED);
-
-        rotatedBitmap = null;
-        switch (orientation) {
-
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                rotatedBitmap = rotateImage(bitmap, 90);
-                break;
-
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                rotatedBitmap = rotateImage(bitmap, 180);
-                break;
-
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                rotatedBitmap = rotateImage(bitmap, 270);
-                break;
-
-            case ExifInterface.ORIENTATION_NORMAL:
-            default:
-                rotatedBitmap = bitmap;
-        }
-        return bitmap;
-    }
 }
 
 
