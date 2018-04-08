@@ -38,17 +38,24 @@ public class MainActivity extends AppCompatActivity {
         friendService.setContext(this);
 
         listViewFriends = findViewById(R.id.listViewFriends);
-     // createFriend();
+       // createFriend();
         allFriends = friendService.getAllFriends();
         listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
         listViewFriends.setAdapter(listAdapter);
 
         addListenerOnList();
-
+    }
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        allFriends = friendService.getAllFriends();
+        listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
+        listViewFriends.setAdapter(listAdapter);
     }
 
-    public MainActivity() {
 
+    public MainActivity() {
         friendService = FriendService.getInstance();
     }
 
@@ -69,9 +76,33 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.optClose:
                     closeApp();
                     return true;
+                case R.id.optSortByName:
+                    sortListByName();
+                    return true;
+               /* case R.id.optSortByDistance:
+                    sortListByDistance();
+                    return true;*/
+                case R.id.optSortByDefault:
+                    sortListByDefault();
+                    return true;
                 default:
                     return super.onOptionsItemSelected(item);
             }
+    }
+
+    private void sortListByName(){
+        allFriends = friendService.sortListByName();
+        listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
+        listViewFriends.setAdapter(listAdapter);
+
+    }
+
+    // private void sortListByDistance(){}
+
+    private void sortListByDefault(){
+        allFriends = friendService.getAllFriends();
+        listAdapter = new ListAdapter(this, R.layout.cell_extended, allFriends);
+        listViewFriends.setAdapter(listAdapter);
     }
 
     private void openDetailActivity(){
@@ -87,6 +118,25 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+<<<<<<< HEAD
+=======
+    private void createFriend()
+    {
+
+        Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", 00.00, 00.00, "12345678","kristian@mail.dk", "kristianshjemmeside.dk", "05-04-81");
+        Friend newFriend3 = new Friend(1, "Simon", "Pedergade 44", 00.00, 00.00, "12345678","simon@mail.dk", "simonshjemmeside.dk", "23-03-81");
+        Friend newFriend4 = new Friend(4, "Hans", "Kirkevej 3", 00.00, 00.00, "12345678","hans@mail.dk", "hanseshjemmeside.dk", "23-03-81");
+        Friend newFriend = new Friend(3, "Knud", "Skolegade 23", 00.00, 00.00, "12345678","knud@mail.dk", "knudshjemmeside.dk", "05-03-81");
+
+        friendService.createFriend(newFriend2);
+        friendService.createFriend(newFriend3);
+        friendService.createFriend(newFriend4);
+        friendService.createFriend(newFriend);
+
+
+    }
+
+>>>>>>> origin/Development
     //Listens on witch item is clicked and
     private void addListenerOnList() {
         listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -132,17 +182,12 @@ class ListAdapter extends ArrayAdapter<Friend> {
     @Override
     public View getView(int position, View v, ViewGroup parent) {
 
-        String TAG = "tag";
-
         if (v == null) {
             LayoutInflater li = (LayoutInflater) getContext().getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
 
             v = li.inflate(R.layout.cell_extended, parent,false);
-            Log.d(TAG, "Position: " + position + " View Reused");
         }
-        else
-            Log.d(TAG, "Position: " + position + " View Reused");
 
         v.setBackgroundColor(colors[position % colors.length]);
 
@@ -155,14 +200,21 @@ class ListAdapter extends ArrayAdapter<Friend> {
 
 
         name.setText(friend.getName());
+<<<<<<< HEAD
         phone.setText(friend.getPhone() + "");
         picture.setImageURI(Uri.parse(friend.getPicture()));
+=======
+        phone.setText(friend.getPhone() +"");
+        birthday.setImageResource(0);
+        picture.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
+>>>>>>> origin/Development
 
         //Sets the image of Dannebrog if the friend has birthday
-       /* if(friendService.isItBirthday(friend.getBirthday()))
+        // Get the retun value from the method in friendService, if true, set a image
+        if(friendService.isItBirthday(friend.getBirthday()))
         {
             birthday.setImageDrawable(context.getResources().getDrawable(R.drawable.dannebrog));
-        }*/
+        }
 
         return v;
     }

@@ -1,5 +1,6 @@
 package com.example.test.myfriends;
 
+<<<<<<< HEAD
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,10 +8,21 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+=======
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+>>>>>>> origin/Development
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +38,7 @@ import android.widget.Toast;
 
 import com.example.test.myfriends.BLL.FriendService;
 import com.example.test.myfriends.Entity.Friend;
+<<<<<<< HEAD
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -35,6 +48,16 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+=======
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+>>>>>>> origin/Development
 
 public class FriendActivity extends AppCompatActivity {
 
@@ -51,6 +74,8 @@ public class FriendActivity extends AppCompatActivity {
     TextView txtBirthday;
     TextView txtWeb;
     ImageView ivPicture;
+    Geocoder geocoder;
+    Friend friend;
 
     Button btnShow;
     ImageButton btnPicture;
@@ -58,6 +83,8 @@ public class FriendActivity extends AppCompatActivity {
     ImageButton btnCall;
 
     private FriendService friendService;
+    private FusedLocationProviderClient mFusedLocationClient;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,34 +105,99 @@ public class FriendActivity extends AppCompatActivity {
         btnCall = findViewById(R.id.btnCall);
         btnPicture = findViewById(R.id.btnPicture);
 
+        Bundle extras = getIntent().getExtras();
+        friend = ((Friend) extras.getSerializable("FRIEND"));
+
         smsPhone();
         callPhone();
         setFriendInfo();
         sendMail();
         openWebsite();
+<<<<<<< HEAD
         takePicture();
+=======
+        openMap(friend);
+
+    }
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Asking user if explanation is needed
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+                //Prompt the user once explanation has been shown
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void setHomeAddress(View v) {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if(!checkLocationPermission())
+            {
+                return;
+            }
+        }
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            geocoder = new Geocoder(getBaseContext());
+                            List<Address> address = new ArrayList<>();
+                            try {
+                                address = geocoder.getFromLocation(latLng.latitude,latLng.longitude,1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            friend.setAddress(address.get(0).getAddressLine(0));
+                            friendService.updateFriend(friend);
+                            setFriendInfo();
+
+                        }
+                    }
+                });
+>>>>>>> origin/Development
     }
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_details, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
 
-        if(id == R.id.menuDelete)
-        {
+        if (id == R.id.menuDelete) {
             deleteAlertBox();
-        }
-        else if (id == R.id.menuEdit)
-        {
+        } else if (id == R.id.menuEdit) {
             Bundle extras = getIntent().getExtras();
             Friend friend = ((Friend) extras.getSerializable("FRIEND"));
 
@@ -120,10 +212,7 @@ public class FriendActivity extends AppCompatActivity {
     }
 
 
-    private void setFriendInfo()
-    {
-        Bundle extras = getIntent().getExtras();
-        Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+    private void setFriendInfo() {
 
         txtName.setText(friend.getName());
         txtAdress.setText(friend.getAddress());
@@ -133,7 +222,6 @@ public class FriendActivity extends AppCompatActivity {
         txtBirthday.setText(friend.getBirthday());
         ivPicture.setImageURI(Uri.parse(friend.getPicture()));
 
-        openMap(friend);
     }
 
 
@@ -142,8 +230,7 @@ public class FriendActivity extends AppCompatActivity {
     }
 
 
-    public void smsPhone()
-    {
+    public void smsPhone() {
         btnSms.setOnClickListener(new View.OnClickListener() {
 
             Bundle extras = getIntent().getExtras();
@@ -154,12 +241,11 @@ public class FriendActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.setData(Uri.parse("smsto:" + Uri.encode(friend.getPhone() + "")));
                 startActivity(intent);
-                }
+            }
         });
     }
 
-    public void callPhone()
-    {
+    public void callPhone() {
         btnCall.setOnClickListener(new View.OnClickListener() {
 
             Bundle extras = getIntent().getExtras();
@@ -174,8 +260,7 @@ public class FriendActivity extends AppCompatActivity {
         });
     }
 
-    public void sendMail()
-    {
+    public void sendMail() {
         txtMail.setOnClickListener(new View.OnClickListener() {
 
             Bundle extras = getIntent().getExtras();
@@ -185,18 +270,17 @@ public class FriendActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("message/rfc822");
-                intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] {friend.getMail()});
-                intent.putExtra(android.content.Intent.EXTRA_SUBJECT,"");
+                intent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{friend.getMail()});
+                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
                 intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
 
                 /* Send it off to the Activity-Chooser */
-                startActivity(Intent.createChooser(intent,"Send"));
+                startActivity(Intent.createChooser(intent, "Send"));
             }
         });
     }
 
-    public void openWebsite()
-    {
+    public void openWebsite() {
         txtWeb.setOnClickListener(new View.OnClickListener() {
 
             Bundle extras = getIntent().getExtras();
@@ -205,7 +289,7 @@ public class FriendActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                if (!url.startsWith("https://") && !url.startsWith("http://")){
+                if (!url.startsWith("https://") && !url.startsWith("http://")) {
                     url = "http://" + url;
                 }
                 Intent openUrlIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -214,8 +298,7 @@ public class FriendActivity extends AppCompatActivity {
         });
     }
 
-    public void openMap(final Friend entry)
-    {
+    public void openMap(final Friend entry) {
         btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -226,40 +309,25 @@ public class FriendActivity extends AppCompatActivity {
         });
     }
 
-    public void deleteFriend()
-    {
-            Bundle extras = getIntent().getExtras();
-            Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+    public void deleteFriend() {
+        Bundle extras = getIntent().getExtras();
+        Friend friend = ((Friend) extras.getSerializable("FRIEND"));
 
 
-                friendService.deleteFriend(friend);
+        friendService.deleteFriend(friend);
 
 
-                Toast.makeText(FriendActivity.this, "You deleted " + friend.getName(),
-                        Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(FriendActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
+        Toast.makeText(FriendActivity.this, "You deleted " + friend.getName(),
+                Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(FriendActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
 
-            public void deleteAlertBox()
-            {
-                Bundle extras = getIntent().getExtras();
-                Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+    public void deleteAlertBox() {
+        Bundle extras = getIntent().getExtras();
+        Friend friend = ((Friend) extras.getSerializable("FRIEND"));
 
-
-                new AlertDialog.Builder(this)
-                        .setTitle("Delete")
-                        .setMessage("Do you really want to delete " + friend.getName() + "?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                deleteFriend();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null).show();
-            }
-
+<<<<<<< HEAD
             private void takePicture()
             {
                 ivPicture.setOnClickListener(new View.OnClickListener() {
@@ -349,7 +417,23 @@ public class FriendActivity extends AppCompatActivity {
             } else
                 Toast.makeText(this, "Picture NOT taken - unknown error...", Toast.LENGTH_LONG).show();
         }
+=======
+
+        new AlertDialog.Builder(this)
+                .setTitle("Delete")
+                .setMessage("Do you really want to delete " + friend.getName() + "?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleteFriend();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show();
+>>>>>>> origin/Development
     }
+}
+
 }
 
 
