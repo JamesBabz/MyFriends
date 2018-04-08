@@ -1,6 +1,6 @@
 package com.example.test.myfriends;
 
-<<<<<<< HEAD
+
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-=======
+
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +16,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
->>>>>>> origin/Development
+
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -35,12 +35,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.test.myfriends.BLL.FriendService;
 import com.example.test.myfriends.Entity.Friend;
-<<<<<<< HEAD
 import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,16 +45,14 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-=======
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
->>>>>>> origin/Development
+
 
 public class FriendActivity extends AppCompatActivity {
 
@@ -113,9 +108,7 @@ public class FriendActivity extends AppCompatActivity {
         setFriendInfo();
         sendMail();
         openWebsite();
-<<<<<<< HEAD
         takePicture();
-=======
         openMap(friend);
 
     }
@@ -180,7 +173,6 @@ public class FriendActivity extends AppCompatActivity {
                         }
                     }
                 });
->>>>>>> origin/Development
     }
 
 
@@ -326,8 +318,8 @@ public class FriendActivity extends AppCompatActivity {
     public void deleteAlertBox() {
         Bundle extras = getIntent().getExtras();
         Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+    }
 
-<<<<<<< HEAD
             private void takePicture()
             {
                 ivPicture.setOnClickListener(new View.OnClickListener() {
@@ -417,7 +409,6 @@ public class FriendActivity extends AppCompatActivity {
             } else
                 Toast.makeText(this, "Picture NOT taken - unknown error...", Toast.LENGTH_LONG).show();
         }
-=======
 
         new AlertDialog.Builder(this)
                 .setTitle("Delete")
@@ -430,11 +421,10 @@ public class FriendActivity extends AppCompatActivity {
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).show();
->>>>>>> origin/Development
     }
 }
 
-}
+
 
 
 

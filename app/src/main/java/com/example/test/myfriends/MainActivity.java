@@ -118,25 +118,6 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-<<<<<<< HEAD
-=======
-    private void createFriend()
-    {
-
-        Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", 00.00, 00.00, "12345678","kristian@mail.dk", "kristianshjemmeside.dk", "05-04-81");
-        Friend newFriend3 = new Friend(1, "Simon", "Pedergade 44", 00.00, 00.00, "12345678","simon@mail.dk", "simonshjemmeside.dk", "23-03-81");
-        Friend newFriend4 = new Friend(4, "Hans", "Kirkevej 3", 00.00, 00.00, "12345678","hans@mail.dk", "hanseshjemmeside.dk", "23-03-81");
-        Friend newFriend = new Friend(3, "Knud", "Skolegade 23", 00.00, 00.00, "12345678","knud@mail.dk", "knudshjemmeside.dk", "05-03-81");
-
-        friendService.createFriend(newFriend2);
-        friendService.createFriend(newFriend3);
-        friendService.createFriend(newFriend4);
-        friendService.createFriend(newFriend);
-
-
-    }
-
->>>>>>> origin/Development
     //Listens on witch item is clicked and
     private void addListenerOnList() {
         listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -198,16 +179,10 @@ class ListAdapter extends ArrayAdapter<Friend> {
         ImageView picture = v.findViewById(R.id.imageViewFriend);
         ImageView birthday = v.findViewById(R.id.imageViewBirthday);
 
-
         name.setText(friend.getName());
-<<<<<<< HEAD
         phone.setText(friend.getPhone() + "");
         picture.setImageURI(Uri.parse(friend.getPicture()));
-=======
-        phone.setText(friend.getPhone() +"");
-        birthday.setImageResource(0);
-        picture.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
->>>>>>> origin/Development
+
 
         //Sets the image of Dannebrog if the friend has birthday
         // Get the retun value from the method in friendService, if true, set a image
