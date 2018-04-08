@@ -1,22 +1,29 @@
 package com.example.test.myfriends;
 
 
+import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 
+import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -29,6 +36,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -73,7 +81,7 @@ public class FriendActivity extends AppCompatActivity {
     Friend friend;
 
     Button btnShow;
-    ImageButton btnPicture;
+    ImageButton btnDelete;
     ImageButton btnSms;
     ImageButton btnCall;
 
@@ -81,10 +89,13 @@ public class FriendActivity extends AppCompatActivity {
     private FusedLocationProviderClient mFusedLocationClient;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+
+
 
         txtName = findViewById(R.id.txtName);
         txtAdress = findViewById(R.id.txtAdress);
@@ -98,7 +109,7 @@ public class FriendActivity extends AppCompatActivity {
         btnShow = findViewById(R.id.btnShow);
         btnSms = findViewById(R.id.btnSms);
         btnCall = findViewById(R.id.btnCall);
-        btnPicture = findViewById(R.id.btnPicture);
+        btnDelete = findViewById(R.id.menuDelete);
 
         Bundle extras = getIntent().getExtras();
         friend = ((Friend) extras.getSerializable("FRIEND"));
@@ -110,6 +121,11 @@ public class FriendActivity extends AppCompatActivity {
         openWebsite();
         takePicture();
         openMap(friend);
+
+    }
+
+    public FriendActivity() {
+        friendService = FriendService.getInstance();
 
     }
 
@@ -212,15 +228,16 @@ public class FriendActivity extends AppCompatActivity {
         txtMail.setText(friend.getMail());
         txtWeb.setText(friend.getWebsite());
         txtBirthday.setText(friend.getBirthday());
-        ivPicture.setImageURI(Uri.parse(friend.getPicture()));
 
+        if (friend.getPicture().equals(""))
+        {
+            ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.placeholder));
+        }
+        else
+        {
+            ivPicture.setImageURI(Uri.parse(friend.getPicture()));
+        }
     }
-
-
-    public FriendActivity() {
-        friendService = FriendService.getInstance();
-    }
-
 
     public void smsPhone() {
         btnSms.setOnClickListener(new View.OnClickListener() {
@@ -305,20 +322,31 @@ public class FriendActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         Friend friend = ((Friend) extras.getSerializable("FRIEND"));
 
-
         friendService.deleteFriend(friend);
 
+        openMain();
 
         Toast.makeText(FriendActivity.this, "You deleted " + friend.getName(),
                 Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(FriendActivity.this, MainActivity.class);
-        startActivity(intent);
+
     }
 
     public void deleteAlertBox() {
-        Bundle extras = getIntent().getExtras();
-        Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+        new AlertDialog.Builder(this)
+                .setTitle("Delete")
+                .setMessage("Do you really want to delete " + friend.getName() + "?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        deleteFriend();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show();
+
+
     }
+
 
             private void takePicture()
             {
@@ -374,8 +402,6 @@ public class FriendActivity extends AppCompatActivity {
 
     private void onClickTakePics()
     {
-
-
         mFile = new File(appFolderCheckandCreate(), "img" + getTimeStamp() + ".jpg");
         uriSavedImage = Uri.fromFile(mFile);
 
@@ -386,7 +412,6 @@ public class FriendActivity extends AppCompatActivity {
 
         // start the image capture Intent
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-
     }
 
     @Override
@@ -399,7 +424,7 @@ public class FriendActivity extends AppCompatActivity {
 
                 friend = new Friend(friend.getId(), friend.getName(), friend.getAddress(), 00.00, 00.00, friend.getPhone(), friend.getMail(), friend.getWebsite(), friend.getBirthday(), this.uriSavedImage + "");
                 friendService.updateFriend(friend);
-                ivPicture.setImageURI(uriSavedImage);
+                ivPicture.setImageURI(Uri.parse(friend.getPicture()));
 
             } else
             if (resultCode == RESULT_CANCELED) {
@@ -409,19 +434,15 @@ public class FriendActivity extends AppCompatActivity {
             } else
                 Toast.makeText(this, "Picture NOT taken - unknown error...", Toast.LENGTH_LONG).show();
         }
-
-        new AlertDialog.Builder(this)
-                .setTitle("Delete")
-                .setMessage("Do you really want to delete " + friend.getName() + "?")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        deleteFriend();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, null).show();
     }
+
+    private void openMain()
+    {
+        Intent intent = new Intent();
+        intent.setClass(this, MainActivity.class);
+        startActivity(intent);
+    }
+
 }
 
 

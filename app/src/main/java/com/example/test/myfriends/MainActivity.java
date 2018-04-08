@@ -184,12 +184,12 @@ class ListAdapter extends ArrayAdapter<Friend> {
         picture.setImageURI(Uri.parse(friend.getPicture()));
 
 
-        //Sets the image of Dannebrog if the friend has birthday
+/*        //Sets the image of Dannebrog if the friend has birthday
         // Get the retun value from the method in friendService, if true, set a image
         if(friendService.isItBirthday(friend.getBirthday()))
         {
             birthday.setImageDrawable(context.getResources().getDrawable(R.drawable.dannebrog));
-        }
+        }*/
 
         return v;
     }

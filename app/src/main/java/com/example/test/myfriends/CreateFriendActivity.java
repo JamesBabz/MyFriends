@@ -47,7 +47,7 @@ public class CreateFriendActivity extends AppCompatActivity {
 
     public void CreateFriend(){
 
-        Friend newfriend = new Friend(1, txtName.getText().toString(), txtAddress.getText().toString(), 00.00, 00.00, txtPhone.getText().toString(), txtMail.getText().toString(), txtWebsite.getText().toString(), txtBirthday.getText().toString(), null);
+        Friend newfriend = new Friend(1, txtName.getText().toString(), txtAddress.getText().toString(), 00.00, 00.00, txtPhone.getText().toString(), txtMail.getText().toString(), txtWebsite.getText().toString(), txtBirthday.getText().toString(), "");
         friendService.createFriend(newfriend);
 
         openMain();
