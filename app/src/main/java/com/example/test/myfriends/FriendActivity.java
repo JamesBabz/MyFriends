@@ -23,6 +23,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 
+import android.media.ExifInterface;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
@@ -79,6 +80,8 @@ public class FriendActivity extends AppCompatActivity {
     ImageView ivPicture;
     Geocoder geocoder;
     Friend friend;
+    Bitmap bitmap;
+    Bitmap rotatedBitmap;
 
     Button btnShow;
     ImageButton btnDelete;
@@ -114,6 +117,7 @@ public class FriendActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         friend = ((Friend) extras.getSerializable("FRIEND"));
 
+
         smsPhone();
         callPhone();
         setFriendInfo();
@@ -121,6 +125,8 @@ public class FriendActivity extends AppCompatActivity {
         openWebsite();
         takePicture();
         openMap(friend);
+
+
 
     }
 
@@ -235,7 +241,8 @@ public class FriendActivity extends AppCompatActivity {
         }
         else
         {
-            ivPicture.setImageURI(Uri.parse(friend.getPicture()));
+
+            ivPicture.setImageBitmap(getAsBitmap());
         }
     }
 
@@ -422,9 +429,12 @@ public class FriendActivity extends AppCompatActivity {
                 Bundle extras = getIntent().getExtras();
                 Friend friend = ((Friend) extras.getSerializable("FRIEND"));
 
+
+
                 friend = new Friend(friend.getId(), friend.getName(), friend.getAddress(), 00.00, 00.00, friend.getPhone(), friend.getMail(), friend.getWebsite(), friend.getBirthday(), this.uriSavedImage + "");
                 friendService.updateFriend(friend);
-                ivPicture.setImageURI(Uri.parse(friend.getPicture()));
+
+                ivPicture.setImageBitmap(getAsBitmap());
 
             } else
             if (resultCode == RESULT_CANCELED) {
@@ -443,6 +453,51 @@ public class FriendActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
+    public Bitmap getAsBitmap()
+    {
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), friend.getPicture());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ExifInterface ei = null;
+        try {
+            ei = new ExifInterface(mFile + "");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        rotatedBitmap = null;
+        switch (orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotatedBitmap = rotateImage(bitmap, 90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotatedBitmap = rotateImage(bitmap, 180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotatedBitmap = rotateImage(bitmap, 270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                rotatedBitmap = bitmap;
+        }
+        return bitmap;
+    }
 }
 
 
