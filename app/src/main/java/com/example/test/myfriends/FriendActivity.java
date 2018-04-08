@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,17 +29,20 @@ import com.example.test.myfriends.Entity.Friend;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class FriendActivity extends AppCompatActivity {
 
-    private final static String LOGTAG = "Camera01";
+    private static final String TAG = "MyActivity";
     private final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
     File mFile;
+    Uri uriSavedImage;
 
     TextView txtName;
     TextView txtAdress;
@@ -49,6 +53,7 @@ public class FriendActivity extends AppCompatActivity {
     ImageView ivPicture;
 
     Button btnShow;
+    ImageButton btnPicture;
     ImageButton btnSms;
     ImageButton btnCall;
 
@@ -67,9 +72,11 @@ public class FriendActivity extends AppCompatActivity {
         txtWeb = findViewById(R.id.txtWeb);
         ivPicture = findViewById(R.id.ivPicture);
 
+
         btnShow = findViewById(R.id.btnShow);
         btnSms = findViewById(R.id.btnSms);
         btnCall = findViewById(R.id.btnCall);
+        btnPicture = findViewById(R.id.btnPicture);
 
         smsPhone();
         callPhone();
@@ -124,7 +131,7 @@ public class FriendActivity extends AppCompatActivity {
         txtMail.setText(friend.getMail());
         txtWeb.setText(friend.getWebsite());
         txtBirthday.setText(friend.getBirthday());
-        ivPicture.setImageDrawable(getResources().getDrawable(R.drawable.download));
+        ivPicture.setImageURI(Uri.parse(friend.getPicture()));
 
         openMap(friend);
     }
@@ -267,49 +274,72 @@ public class FriendActivity extends AppCompatActivity {
                 });
             }
 
+    private String appFolderCheckandCreate(){
+
+        String appFolderPath="";
+        File externalStorage = Environment.getExternalStorageDirectory();
+
+        if (externalStorage.canWrite())
+        {
+            appFolderPath = externalStorage.getAbsolutePath() + "/MyApp";
+            File dir = new File(appFolderPath);
+
+            if (!dir.exists())
+            {
+                dir.mkdirs();
+            }
+
+        }
+        else
+        {
+            //showToast("  Storage media not found or is full ! ");
+        }
+
+        return appFolderPath;
+    }
+
+
+
+    private String getTimeStamp() {
+
+        final long timestamp = new Date().getTime();
+
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp);
+
+        final String timeString = new SimpleDateFormat("HH_mm_ss_SSS").format(cal.getTime());
+
+
+        return timeString;}
+
     private void onClickTakePics()
     {
 
-        mFile = getOutputMediaFile(); // create a file to save the image
-        if (mFile == null)
-        {
-            Toast.makeText(this, "Could not create file...", Toast.LENGTH_LONG).show();
-            return;
-        }
+
+        mFile = new File(appFolderCheckandCreate(), "img" + getTimeStamp() + ".jpg");
+        uriSavedImage = Uri.fromFile(mFile);
+
         // create Intent to take a picture
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mFile));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+        intent.putExtra("return-data", true);
 
         // start the image capture Intent
         startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 
     }
 
-
-    /** Create a File for saving an image */
-    private File getOutputMediaFile(){
-
-
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "Camera01");
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String postfix = "jpg";
-        String prefix = "IMG";
-
-        File mediaFile = new File(mediaStorageDir.getPath() +
-                File.separator + prefix +
-                "_"+ timeStamp + "." + postfix);
-
-        return mediaFile;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                showPictureTaken(mFile);
+
+                Bundle extras = getIntent().getExtras();
+                Friend friend = ((Friend) extras.getSerializable("FRIEND"));
+
+                friend = new Friend(friend.getId(), friend.getName(), friend.getAddress(), 00.00, 00.00, friend.getPhone(), friend.getMail(), friend.getWebsite(), friend.getBirthday(), this.uriSavedImage + "");
+                friendService.updateFriend(friend);
+                ivPicture.setImageURI(uriSavedImage);
 
             } else
             if (resultCode == RESULT_CANCELED) {
@@ -319,10 +349,6 @@ public class FriendActivity extends AppCompatActivity {
             } else
                 Toast.makeText(this, "Picture NOT taken - unknown error...", Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void showPictureTaken(File f) {
-        Picasso.with(this).load(Uri.fromFile(f)).into(ivPicture);
     }
 }
 

@@ -3,6 +3,7 @@ package com.example.test.myfriends;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -86,22 +87,6 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    private void createFriend()
-    {
-        Friend newFriend = new Friend(1, "Knud", "Storegade 23", 00.00, 00.00, "12345678","knud@mail.dk", "knudshjemmeside.dk", "23-03-81");
-        Friend newFriend2 = new Friend(2, "Kristian", "Lillevej 55", 00.00, 00.00, "12345678","kristian@mail.dk", "kristianshjemmeside.dk", "23-03-81");
-        Friend newFriend3 = new Friend(3, "Simon", "Peder gade 44", 00.00, 00.00, "12345678","simon@mail.dk", "simonshjemmeside.dk", "23-03-81");
-        Friend newFriend4 = new Friend(4, "Hans", "Kirkevej 3", 00.00, 00.00, "12345678","hans@mail.dk", "hanseshjemmeside.dk", "23-03-81");
-
-        friendService.createFriend(newFriend);
-        friendService.createFriend(newFriend2);
-        friendService.createFriend(newFriend3);
-        friendService.createFriend(newFriend4);
-
-
-
-    }
-
     //Listens on witch item is clicked and
     private void addListenerOnList() {
         listViewFriends.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -170,8 +155,8 @@ class ListAdapter extends ArrayAdapter<Friend> {
 
 
         name.setText(friend.getName());
-        phone.setText(friend.getPhone() +"");
-        picture.setImageDrawable(context.getResources().getDrawable(R.drawable.download));
+        phone.setText(friend.getPhone() + "");
+        picture.setImageURI(Uri.parse(friend.getPicture()));
 
         //Sets the image of Dannebrog if the friend has birthday
        /* if(friendService.isItBirthday(friend.getBirthday()))

@@ -16,5 +16,10 @@
         android:title="Delete"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/btnPicture"
+        android:title="Picture"
+        app:showAsAction="ifRoom" />
+
 
 </menu>

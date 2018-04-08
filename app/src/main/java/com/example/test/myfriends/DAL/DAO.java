@@ -44,7 +44,7 @@ public class DAO {
     }
 
     private static final String INSERT = "insert into " + TABLE_NAME
-            + "(name, address, altitude, longitude, phone, mail, website, birthday) values (?, ?, ?, ?, ?, ?, ?, ?)";
+            + "(name, address, altitude, longitude, phone, mail, website, birthday, picture) values (? ,?, ?, ?, ?, ?, ?, ?, ?)";
 
     public long insert(Friend f) {
         this.insertStmt.bindString(1, f.getName());
@@ -55,6 +55,7 @@ public class DAO {
         this.insertStmt.bindString(6, f.getMail());
         this.insertStmt.bindString(7, f.getWebsite());
         this.insertStmt.bindString(8, f.getBirthday());
+        this.insertStmt.bindString(9, f.getPicture() + "");
 
 
         long id = this.insertStmt.executeInsert();
@@ -65,14 +66,14 @@ public class DAO {
     public ArrayList<Friend> getAll() {
         ArrayList<Friend> list = new ArrayList<Friend>();
         Cursor cursor = this.db.query(TABLE_NAME,
-                new String[]{"id", "name", "address", "altitude", "longitude", "phone", "mail", "website", "birthday"},
+                new String[]{"id", "name", "address", "altitude", "longitude", "phone", "mail", "website", "birthday", "picture"},
                 null, null,
                 null, null, "name desc");
 
         if (cursor.moveToFirst()) {
             do {
                 list.add(new Friend(
-                        cursor.getInt(0),
+                        cursor.getLong(0),
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getDouble(3),
@@ -80,7 +81,8 @@ public class DAO {
                         cursor.getString(5),
                         cursor.getString(6),
                         cursor.getString(7),
-                        cursor.getString(8)
+                        cursor.getString(8),
+                        cursor.getString(9)
                         ));
             } while (cursor.moveToNext());
         }
@@ -112,6 +114,7 @@ public class DAO {
         contentValues.put("mail", friend.getMail());
         contentValues.put("website", friend.getWebsite());
         contentValues.put("birthday", friend.getBirthday());
+        contentValues.put("picture", friend.getPicture() + "");
 
         db.update(TABLE_NAME, contentValues, "ID = ?",new String[] { friend.getId() + "" });
 
@@ -127,7 +130,7 @@ public class DAO {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + TABLE_NAME
-                    + " (id INTEGER PRIMARY KEY, name TEXT, address TEXT, altitude INTEGER, longitude INTEGER, phone TEXT, mail TEXT, website TEXT, birthday TEXT)");
+                    + " (id INTEGER PRIMARY KEY, name TEXT, address TEXT, altitude INTEGER, longitude INTEGER, phone TEXT, mail TEXT, website TEXT, birthday TEXT, picture TEXT)");
 
         }
 
