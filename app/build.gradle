@@ -4,8 +4,8 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.test.myfriends"
-        minSdkVersion 21
-        targetSdkVersion 26
+        minSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -29,4 +29,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:11.8.0'
     compile 'com.makeramen:roundedimageview:2.3.0'
     compile 'com.google.android.gms:play-services-location:11.8.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
