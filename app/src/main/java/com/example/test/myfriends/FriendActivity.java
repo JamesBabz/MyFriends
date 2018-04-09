@@ -48,6 +48,7 @@ import com.example.test.myfriends.BLL.FriendService;
 import com.example.test.myfriends.Entity.Friend;
 import com.squareup.picasso.Picasso;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -61,6 +62,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class FriendActivity extends AppCompatActivity {
@@ -464,7 +466,7 @@ public class FriendActivity extends AppCompatActivity {
                         rotatedBitmap = bitmap;
                 }
 
-                friend = new Friend(friend.getId(), friend.getName(), friend.getAddress(), 00.00, 00.00, friend.getPhone(), friend.getMail(), friend.getWebsite(), friend.getBirthday(), this.uriSavedImage + "");
+                friend = new Friend(friend.getId(), friend.getName(), friend.getAddress(), 00.00, 00.00, friend.getPhone(), friend.getMail(), friend.getWebsite(), friend.getBirthday(), bitmapToUriConverter(rotatedBitmap) + "");
                 friendService.updateFriend(friend);
 
                 ivPicture.setImageBitmap(rotatedBitmap);
@@ -491,6 +493,32 @@ public class FriendActivity extends AppCompatActivity {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
+    }
+
+    public Uri bitmapToUriConverter(Bitmap mBitmap) {
+        Uri uri = null;
+        try {
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            Bitmap newBitmap = Bitmap.createScaledBitmap(mBitmap, mBitmap.getWidth(), mBitmap.getHeight(), true);
+            File file = new File(this.getFilesDir(), "Image"
+                    + new Random().nextInt() + ".jpeg");
+            FileOutputStream out = this.openFileOutput(file.getName(),
+                    Context.MODE_WORLD_READABLE);
+            newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+            //get absolute path
+            String realPath = file.getAbsolutePath();
+            File f = new File(realPath);
+            uri = Uri.fromFile(f);
+
+        } catch (Exception e) {
+            Log.e("Your Error Message", e.getMessage());
+        }
+        return uri;
     }
 
 }
